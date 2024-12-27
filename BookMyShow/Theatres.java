@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 public class Theatres {
     private String name;
-    private ArrayList<String> movies = new ArrayList<>();
-    private String location ;
+    private ArrayList<Screens> screens = new ArrayList<Screens>();
+  //  private ArrayList<String> movies = new ArrayList<>();
+  //  private String location ;
 
-    public Theatres(String name, String location,ArrayList<String> movies)
+    public Theatres(String name, ArrayList<Screens> screens)
     {
         this.name = name;
-        this.movies = movies;
-        this.location = location;
+        this.screens = screens;
+//        this.movies = movies;
+//        this.location = location;
     }
     public void setName(String name) {
         this.name = name;
@@ -21,19 +23,27 @@ public class Theatres {
         return name;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public ArrayList<Screens> getScreens() {
+        return screens;
     }
 
-    public String getLocation() {
-        return location;
+    public void setScreens(ArrayList<Screens> screens) {
+        this.screens = screens;
     }
 
-    public ArrayList<String> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(ArrayList<String> movies) {
-        this.movies = movies;
-    }
+    //    public void setLocation(String location) {
+//        this.location = location;
+//    }
+//
+//    public String getLocation() {
+//        return location;
+//    }
+//
+//    public ArrayList<String> getMovies() {
+//        return movies;
+//    }
+//
+//    public void setMovies(ArrayList<String> movies) {
+//        this.movies = movies;
+//    }
 }

@@ -38,11 +38,6 @@ public class UserActions {
         String userName = s.nextLine();
         System.out.print("Enter a password :");
         String password = s.nextLine();
-        System.out.println("Available Locations..");
-        for(String availableLocations:BookMyShow.getLocation())
-        {
-            System.out.println(availableLocations);
-        }
         System.out.print("Enter your Location :");
         String location = s.nextLine();
         BookMyShow.getUsers().add(new User(userName,password,name,location));
@@ -52,16 +47,10 @@ public class UserActions {
 
     public static void showOperations(Scanner s,User currentUser)
     {
-        System.out.println("Choose your Operations..!!");
+        System.out.print("Choose your Operations..!!");
 
-//        ArrayList<Theatres> availableTheatres = BookMyShow.getTheatres();
-//        for(Theatres theatres:availableTheatres)
-//        {
-//            if(currentUser.getLocation().equals(theatres.getLocation()))
-//            {
-//                System.out.println("* "+theatres.getName());
-//            }
-//        }
+
+
 
     }
 }

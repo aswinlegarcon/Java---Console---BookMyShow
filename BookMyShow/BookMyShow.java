@@ -1,12 +1,14 @@
 package BookMyShow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BookMyShow {
     private static ArrayList<User> users= new ArrayList<>();
     private static ArrayList<Admin> admins= new ArrayList<>();
-    private static ArrayList<String> location = new ArrayList<>();
     private static  ArrayList<Theatres> theatres = new ArrayList<>();
+    private static HashMap<String,ArrayList<Theatres>> locationAndTheatres = new HashMap<String,ArrayList<Theatres>>();
+    private static HashMap<String,ArrayList<Movies>> locationAndMovies = new HashMap<String,ArrayList<Movies>>();
 
     public static ArrayList<Admin> getAdmins() {
         return BookMyShow.admins;
@@ -16,11 +18,16 @@ public class BookMyShow {
         return BookMyShow.users;
     }
 
-    public static ArrayList<String> getLocation() {
-        return location;
-    }
 
     public static ArrayList<Theatres> getTheatres() {
         return theatres;
+    }
+
+    public static HashMap<String, ArrayList<Theatres>> getLocationAndTheatres() {
+        return locationAndTheatres;
+    }
+
+    public static HashMap<String, ArrayList<Movies>> getLocationAndMovies() {
+        return locationAndMovies;
     }
 }
