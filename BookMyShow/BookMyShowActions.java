@@ -9,27 +9,40 @@ public class BookMyShowActions {
     {
         Scanner s = new Scanner(System.in);
         // adding user for now for easy login
-        BookMyShow.getUsers().add(new User("aswin","123","Aswin","CBE"));
+        BookMyShow.getUsers().add(new User("aswin","123","Aswin","cbe"));
         BookMyShow.getAdmins().add(new Admin("admin","123")); // create admins
-        BookMyShow.getLocation().add("CBE"); // create a location for now
+        System.out.println("--------------------------");
+        System.out.println("| Welcome to Book My Show |");
+        System.out.println("--------------------------");
+        // create a location for now
         while (true)
         {
+
             System.out.println("Enter Your Role: \n 1. Admin \n 2. User \n 3. Exit");
             int operationChoice = Integer.parseInt(s.nextLine());
             switch (operationChoice)
             {
                 case 1:
                     Admin currentAdmin = AdminActions.login(s);
-                    if(currentAdmin!=null)
+                    if(currentAdmin.getUserName() == null)
+                    {
+                        break;
+                    }
+                    else if(currentAdmin!=null)
                     {
                         AdminActions.showOperations(s,currentAdmin);
                     }
                     break;
                 case 2:
                     User currentUser = UserActions.login(s);
-                    if(currentUser!=null)
+                    if(currentUser.getUserName() == null)
                     {
-                        UserActions.showOperations(s,currentUser);
+                        break;
+                    }
+                    else if(currentUser!=null)
+                    {
+                        String userMovie = UserActions.showMovies(s,currentUser);
+                        break;
                     }
                     else if(currentUser==null)
                     {
@@ -51,6 +64,7 @@ public class BookMyShowActions {
                         }
                         break;
                     }
+                        break;
                 case 3:
                     System.out.println("Exittingg...");
                     System.exit(0);

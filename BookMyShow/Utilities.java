@@ -38,7 +38,7 @@ public class Utilities {
                 noOfSeats = noOfSeats - sumOfGrids;
             }
             return seatsAndGrids;
-            }
+        }
 
         System.out.println("No of Seats does not match");
         return null;

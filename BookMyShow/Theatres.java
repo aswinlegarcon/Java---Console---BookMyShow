@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Theatres {
     private String name;
     private ArrayList<Screens> screens = new ArrayList<Screens>();
-  //  private ArrayList<String> movies = new ArrayList<>();
-  //  private String location ;
+    //  private ArrayList<String> movies = new ArrayList<>();
+    //  private String location ;
 
     public Theatres(String name, ArrayList<Screens> screens)
     {
