@@ -10,8 +10,8 @@ public class BookMyShow {
     private static ArrayList<Theatres> theatres = new ArrayList<>();
     private static ArrayList<String> locations = new ArrayList<>();
     private static ArrayList<Movies> movies = new ArrayList<>();
-   // private static HashMap<String,ArrayList<Theatres>> locationAndTheatres = new HashMap<String,ArrayList<Theatres>>();
-   // private static HashMap<String,ArrayList<Movies>> locationAndMovies = new HashMap<String,ArrayList<Movies>>();
+    // private static HashMap<String,ArrayList<Theatres>> locationAndTheatres = new HashMap<String,ArrayList<Theatres>>();
+    // private static HashMap<String,ArrayList<Movies>> locationAndMovies = new HashMap<String,ArrayList<Movies>>();
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public static ArrayList<Admin> getAdmins() {

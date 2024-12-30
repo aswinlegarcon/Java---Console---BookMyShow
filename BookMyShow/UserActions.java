@@ -1,5 +1,6 @@
 package BookMyShow;
 
+import java.awt.print.Book;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -68,28 +69,84 @@ public class UserActions {
 
     private static boolean displayMovies(User currentUser, LocalDate dateOfUser)
     {
+        boolean check = false;
         for(Movies movies : BookMyShow.getMovies())
         {
             if(movies.getLocation().equals(currentUser.getLocation()))
             {
-                if(dateOfUser.isAfter(movies.getStartDate()) && dateOfUser.isBefore(movies.getEndDate()))
+                if((dateOfUser.isAfter(movies.getStartDate()) || dateOfUser.isEqual(movies.getStartDate())) && (dateOfUser.isBefore(movies.getEndDate()) || dateOfUser.isEqual(movies.getEndDate() )))
                 {
                     System.out.println("*"+movies.getName());
+                    check = true;
                 }
             }
         }
-
-        System.out.println("No movies available in this location..");
-        return false;
+        return check;
     }
 
-    public static String showMovies(User currentUser)
-    {
+    public static String showMovies(User currentUser) {
         Scanner s = new Scanner(System.in);
-            System.out.print("Enter the date when to look for movies : ");
-            LocalDate dateOfUser = LocalDate.parse(s.nextLine(), BookMyShow.getFormatter());
-            displayMovies(currentUser, dateOfUser);
-            return "";
+        LocalDate currentDate = LocalDate.now();
+        LocalDate userDate = currentDate;
+        doChange:while (true) {
+            System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter()));
+            System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter()));
+            System.out.println("Current location : "+ currentUser.getLocation());
+
+            boolean status = displayMovies(currentUser, userDate);
+            if (!status) {
+                System.out.println("No movies available in this location..in this date..");
+            }
+            System.out.print("Do you want to change your date/location (y/n) : ");
+            String wishOfUser = s.nextLine();
+            switch (wishOfUser) {
+                case "y":
+                    while (true) {
+                        System.out.print("Enter 'date' to change date | Enter 'location' to change location | Enter 'exit' to quit : ");
+                        String changeOption = s.nextLine();
+                        switch (changeOption) {
+                            case "date":
+                                System.out.print("Enter the date when to look for movies : ");
+                                LocalDate dateOfUser = LocalDate.parse(s.nextLine(), BookMyShow.getFormatter());
+                                if (dateOfUser.isAfter(currentDate) || dateOfUser.isEqual(currentDate)) {
+                                    userDate = dateOfUser;
+                                    continue doChange;
+                                }
+                                System.out.println("Enter upcoming dates not the past days..");
+                                break;
+
+                            case "location":
+                                for (String availableLocations : BookMyShow.getLocations()) {
+                                    System.out.println("* " + availableLocations);
+                                }
+                                System.out.print("Enter the location where to look for movies : ");
+                                String locationToLook = s.nextLine();
+                                if (BookMyShow.getLocations().contains(locationToLook)) {
+                                    currentUser.setLocation(locationToLook);
+                                    continue doChange;
+                                }
+                                System.out.println("That location is not available..");
+                                break;
+                            case "exit":
+                                break doChange;
+
+                            default:
+                                System.out.println("Enter correct input ");
+                                break;
+
+                        }
+                    }
+                        case "n":
+                            System.out.println("Leaving App...!!");
+                            break;
+            }
+                    }
+
+        return "";
+    }
+
+
+
 //            if(displayMovies(currentUser,dateOfUser))
 //            {
 //                System.out.print("Enter the Movie's Name to book Tickets (type 'exit' to logout | type 'change-location' to change location | type 'change-date' to change date): ");
@@ -115,7 +172,7 @@ public class UserActions {
 //                        }
 //                    }
 //            }
-    }
+
 
     private static String changeLocation(Scanner s,User currentUser)
     {
