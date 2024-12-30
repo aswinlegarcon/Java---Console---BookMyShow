@@ -1,5 +1,6 @@
 package BookMyShow;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,7 +21,7 @@ public class UserActions {
                 System.out.println("Login Success...!!");
                 return userToCheck;
             }
-            else
+            else if(userToCheck.getUserName().equals(userName) && !userToCheck.getPassword().equals(password))
             {
                 System.out.println("Invalid Username or Password....Try Again");
                 return new User(null,null,null,null);
@@ -65,74 +66,69 @@ public class UserActions {
     }
 
 
-    public static String showMovies(Scanner s,User currentUser)
+    private static boolean displayMovies(User currentUser, LocalDate dateOfUser)
     {
-        changeLocation:while (true)
+        for(Movies movies : BookMyShow.getMovies())
         {
-            var moviesList = BookMyShow.getLocationAndMovies().get(currentUser.getLocation());
-            if (moviesList!=null)
+            if(movies.getLocation().equals(currentUser.getLocation()))
             {
-                while (true)
+                if(dateOfUser.isAfter(movies.getStartDate()) && dateOfUser.isBefore(movies.getEndDate()))
                 {
-
-                    System.out.println("The Movies available in your areas are as follows..");
-                    int no = 1;
-                    for(var movies:moviesList)
-                    {
-                        System.out.println(no+" "+movies.getName());
-                        no++;
-                    }
-                    System.out.print("Enter the Movie's Name to book Tickets (type 'exit' to logout | type 'change' to change location): ");
-                    String userSelectedMovie = s.nextLine();
-                    if(userSelectedMovie.equals("exit"))
-                    {
-                        return null;
-                    }
-                    if(userSelectedMovie.equals("change"))
-                    {
-                        String toCheck = UserActions.changeLocation(s,currentUser);
-                        if (toCheck.equals("Done"))
-                        {
-                            continue changeLocation;
-                        }
-                    }
-                    for(var movies:moviesList)
-                    {
-                        if(movies.getName().equals(userSelectedMovie))
-                        {
-                            System.out.println("You selected "+ userSelectedMovie);
-                            System.out.println("The Info about movie is :");
-                            System.out.println("Release date : "+movies.getDate().format(BookMyShow.getFormatter()));
-                            System.out.println("Duration : "+movies.getDuration()+" mins");
-                            return userSelectedMovie;
-                        }
-                    }
-                    System.out.println("The entered movie is not available..Try again");
-
+                    System.out.println("*"+movies.getName());
                 }
             }
-            else
-            {
-                System.out.println("There are no movies available in the area..");
-            }
-            return null;
-        }
         }
 
+        System.out.println("No movies available in this location..");
+        return false;
+    }
+
+    public static String showMovies(User currentUser)
+    {
+        Scanner s = new Scanner(System.in);
+            System.out.print("Enter the date when to look for movies : ");
+            LocalDate dateOfUser = LocalDate.parse(s.nextLine(), BookMyShow.getFormatter());
+            displayMovies(currentUser, dateOfUser);
+            return "";
+//            if(displayMovies(currentUser,dateOfUser))
+//            {
+//                System.out.print("Enter the Movie's Name to book Tickets (type 'exit' to logout | type 'change-location' to change location | type 'change-date' to change date): ");
+//                String movieToBook = s.nextLine();
+//                if(movieToBook.equals("exit"))
+//                {
+//                    return "Exit";
+//                }
+//                else if(movieToBook.equals(""))
+//                {
+//
+//                }
+//                for(Movies movies : BookMyShow.getMovies())
+//                {
+//                    if(movies.getLocation().equals(currentUser.getLocation()))
+//                    {
+//                        if(movies.getStartDate().isAfter(dateOfUser) && movies.getEndDate().isBefore(dateOfUser))
+//                        {
+//                            if(movies.getName().equals(movieToBook))
+//                            {
+//
+//                            }
+//                        }
+//                    }
+//            }
+    }
 
     private static String changeLocation(Scanner s,User currentUser)
     {
-        var locations = BookMyShow.getLocationAndMovies().entrySet();
         System.out.println("Available Locations...");
-        for(var key:locations)
+        for(String location :BookMyShow.getLocations())
         {
-            System.out.println(key.getKey());
+            System.out.println("*"+location);
         }
         while (true)
         {
             System.out.print("Enter the location where to look for movies :");
             String locationToChange = s.nextLine();
-            if(BookMyShow.getLocationAndTheatres().containsKey(locationToChange))
+            if(BookMyShow.getLocations().contains(locationToChange))
             {
                 currentUser.setLocation(locationToChange);
                 return "Done";

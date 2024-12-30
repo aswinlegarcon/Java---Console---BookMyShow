@@ -35,16 +35,7 @@ public class BookMyShowActions {
                     break;
                 case 2:
                     User currentUser = UserActions.login(s);
-                    if(currentUser.getUserName() == null)
-                    {
-                        break;
-                    }
-                    else if(currentUser!=null)
-                    {
-                        String userMovie = UserActions.showMovies(s,currentUser);
-                        break;
-                    }
-                    else if(currentUser==null)
+                    if(currentUser==null)
                     {
                         System.out.println("No Account Found..Register and Try again");
                         System.out.print("Do you want to register ( y/n ) :");
@@ -64,7 +55,17 @@ public class BookMyShowActions {
                         }
                         break;
                     }
+                    else if(currentUser.getUserName() == null)
+                    {
                         break;
+                    }
+                    else if(currentUser!=null)
+                    {
+                        String userMovie = UserActions.showMovies(currentUser);
+                        break;
+                    }
+
+                    break;
                 case 3:
                     System.out.println("Exittingg...");
                     System.exit(0);
