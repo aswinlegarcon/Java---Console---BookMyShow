@@ -7,6 +7,7 @@ public class Screens {
     private String nameOfScreen;
     private long numberOfSeats;
     private HashMap<Character, ArrayList<String>> seatsAndGrid = new HashMap<>();
+    private ArrayList<Shows> showsInScreen = new ArrayList<>();
 
     public Screens (String nameOfScreen, long numberOfSeats, HashMap<Character,ArrayList<String>> seatsAndGrid)
     {
@@ -16,6 +17,10 @@ public class Screens {
     }
     public String getNameOfScreen() {
         return nameOfScreen;
+    }
+
+    public ArrayList<Shows> getShowsInScreen() {
+        return showsInScreen;
     }
 
     public void setNameOfScreen(String nameOfScreen) {

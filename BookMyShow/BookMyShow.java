@@ -13,6 +13,7 @@ public class BookMyShow {
     // private static HashMap<String,ArrayList<Theatres>> locationAndTheatres = new HashMap<String,ArrayList<Theatres>>();
     // private static HashMap<String,ArrayList<Movies>> locationAndMovies = new HashMap<String,ArrayList<Movies>>();
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public static ArrayList<Admin> getAdmins() {
         return BookMyShow.admins;
@@ -24,6 +25,9 @@ public class BookMyShow {
 
     public static DateTimeFormatter getFormatter() {
         return formatter;
+    }
+    public static DateTimeFormatter getTimeFormatter() {
+        return timeFormatter;
     }
 
     public static ArrayList<User> getUsers() {

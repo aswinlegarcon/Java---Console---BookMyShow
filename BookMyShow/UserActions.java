@@ -97,7 +97,42 @@ public class UserActions {
             if (!status) {
                 System.out.println("No movies available in this location..in this date..");
             }
-            System.out.print("Do you want to change your date/location (y/n) : ");
+            System.out.println("Enter the movie name to book : ");
+            String movieToBook = s.nextLine();
+            for(Movies movies : BookMyShow.getMovies())
+            {
+                if(movies.getLocation().equals(currentUser.getLocation()))
+                {
+                    if((userDate.isAfter(movies.getStartDate()) || userDate.isEqual(movies.getStartDate())) && (userDate.isBefore(movies.getEndDate()) || userDate.isEqual(movies.getEndDate() )))
+                    {
+                        if(movies.getName().equals(movieToBook))
+                        {
+                            for(Theatres theatres:BookMyShow.getTheatres())
+                            {
+                                for(Movies movieInTheatre : theatres.getMovies())
+                                {
+                                    if(movieInTheatre.getName().equals(movieToBook))
+                                    {
+                                        System.out.println("---------"+theatres.getName()+"----------");
+                                    }
+                                }
+                                for(Screens screens:theatres.getScreens())
+                                {
+                                    for (Shows shows:screens.getShowsInScreen())
+                                    {
+                                        if(shows.getMovieName().equals(movieToBook) && shows.getDateOfShow().isEqual(userDate))
+                                        {
+                                            System.out.print(" "+shows.getStartTime());
+                                            System.out.println();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            System.out.print("Do you want to change your date/location (y/n) type 'exit' to logout : ");
             String wishOfUser = s.nextLine();
             switch (wishOfUser) {
                 case "y":
@@ -137,11 +172,16 @@ public class UserActions {
                         }
                     }
                         case "n":
-                            System.out.println("Leaving App...!!");
+                            System.out.println("Refreshing...!!");
                             break;
-            }
-                    }
+                        case "exit":
+                            System.out.println("Logging out");
+                            break;
+                default:
+                    System.out.println("Enter correct input..!!");
 
+            }
+        }
         return "";
     }
 

@@ -43,10 +43,10 @@ public class Theatres {
 //        return location;
 //    }
 //
-//    public ArrayList<String> getMovies() {
-//        return movies;
-//    }
-//
+    public ArrayList<Movies> getMovies() {
+        return movies;
+    }
+
 //    public void setMovies(ArrayList<String> movies) {
 //        this.movies = movies;
 //    }
