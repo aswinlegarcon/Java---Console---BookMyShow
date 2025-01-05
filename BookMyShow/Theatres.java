@@ -1,17 +1,17 @@
 package BookMyShow;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Theatres {
     private String name;
-    private ArrayList<Screens> screens = new ArrayList<Screens>();
-    private ArrayList<Movies> movies = new ArrayList<>();
+    private HashMap<String,Screens> screenNameAndObject = new HashMap<>();
     private String location ;
 
-    public Theatres(String name, ArrayList<Screens> screens, String location)
+    public Theatres(String name, HashMap<String,Screens> screenNameAndObject, String location)
     {
         this.name = name;
-        this.screens = screens;
+        this.screenNameAndObject = screenNameAndObject;
         //this.movies = movies;
         this.location = location;
     }
@@ -23,12 +23,8 @@ public class Theatres {
         return name;
     }
 
-    public ArrayList<Screens> getScreens() {
-        return screens;
-    }
-
-    public void setScreens(ArrayList<Screens> screens) {
-        this.screens = screens;
+    public HashMap<String,Screens> getScreenNameAndObject() {
+        return screenNameAndObject;
     }
 
     public String getLocation() {
@@ -43,9 +39,6 @@ public class Theatres {
 //        return location;
 //    }
 //
-    public ArrayList<Movies> getMovies() {
-        return movies;
-    }
 
 //    public void setMovies(ArrayList<String> movies) {
 //        this.movies = movies;

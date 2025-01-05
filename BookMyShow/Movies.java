@@ -7,18 +7,22 @@ import java.util.HashMap;
 public class Movies {
     private String name;
   //  private HashMap<String, ArrayList<Theatres>>  locationAndTheatre = new HashMap<>();
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate date;
     private long duration;
     private String location;
+    private Theatres theatre;
+    private Screens screen;
+    private Shows show;
 
-    public Movies(String name,String location,LocalDate startDate,LocalDate endDate,long duration)
+    public Movies(String name,String location,LocalDate date,long duration,Theatres theatre,Screens screen,Shows show)
     {
         this.name = name;
         this.location = location;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.date = date;
         this.duration = duration;
+        this.theatre = theatre;
+        this.screen = screen;
+        this.show = show;
     }
 
     public String getLocation()
@@ -41,11 +45,17 @@ public class Movies {
 //        return locationAndTheatre;
 //    }
 
-    public LocalDate getStartDate() {
-        return startDate;
+
+    public Screens getScreen() {
+        return screen;
     }
-    public LocalDate getEndDate() {
-        return endDate;
+
+    public Theatres getTheatre() {
+        return theatre;
+    }
+
+    public Shows getShow() {
+        return show;
     }
 
     public long getDuration() {
