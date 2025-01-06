@@ -25,6 +25,10 @@ public class Movies {
         this.show = show;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
     public String getLocation()
     {
         return location;

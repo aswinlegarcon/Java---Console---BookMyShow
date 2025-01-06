@@ -36,38 +36,38 @@ public class BookMyShowActions {
                     break;
 //                    If User came into Book My Show
                 case 2:
-                    User currentUser = UserActions.login(s);// getting user object and storing (returns null if no users - returns user if vaild credentials - return username as null if password wrong)
-                    if(currentUser==null) // check if username is null (if null then ask user want to register or not)
-                    {
-                        System.out.println("No Account Found..Register and Try again");
-                        System.out.print("Do you want to register ( y/n ) :");//asking user to enter the choice
-                        String option = s.nextLine();
-                        if(option.equals("y")) // if yess then register the user
-                        {
-                            UserActions.register(s);
-                        }
-                        else if (option.equals("n"))// if noo the exits
-                        {
-                            System.out.println("Exitting..");
-                            break;
-                        }
-                        else// if wrong input
-                        {
-                            System.out.println("Enter either 'y' or 'n' ...");
-                        }
-                        break;
-                    }
-                    else if(currentUser.getUserName() == null) // if wrong password then break
-                    {
-                        break;
-                    }
-                    else if(currentUser!=null) // if vaild credentials then call show movies
-                    {
-                        String userMovie = UserActions.showMovies(currentUser);
-                        break;
-                    }
-
-                    break;
+//                    User currentUser = UserActions.login(s);// getting user object and storing (returns null if no users - returns user if vaild credentials - return username as null if password wrong)
+//                    if(currentUser==null) // check if username is null (if null then ask user want to register or not)
+//                    {
+//                        System.out.println("No Account Found..Register and Try again");
+//                        System.out.print("Do you want to register ( y/n ) :");//asking user to enter the choice
+//                        String option = s.nextLine();
+//                        if(option.equals("y")) // if yess then register the user
+//                        {
+//                            UserActions.register(s);
+//                        }
+//                        else if (option.equals("n"))// if noo the exits
+//                        {
+//                            System.out.println("Exitting..");
+//                            break;
+//                        }
+//                        else// if wrong input
+//                        {
+//                            System.out.println("Enter either 'y' or 'n' ...");
+//                        }
+//                        break;
+//                    }
+//                    else if(currentUser.getUserName() == null) // if wrong password then break
+//                    {
+//                        break;
+//                    }
+//                    else if(currentUser!=null) // if vaild credentials then call show movies
+//                    {
+//                        String userMovie = UserActions.showMovies(currentUser);
+//                        break;
+//                    }
+//
+//                    break;
 //                    If want to exit
                 case 3:
                     System.out.println("Exittingg...");

@@ -21,13 +21,12 @@ public class Shows {
     public LocalDate getDateOfShow() {
         return dateOfShow;
     }
+    public LocalTime getStartTime() {
+        return startTime;
+    }
 
     public LocalTime getEndTime() {
         return endTime;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
     }
 
     public String getMovieName() {

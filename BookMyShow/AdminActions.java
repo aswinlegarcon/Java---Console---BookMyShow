@@ -123,21 +123,20 @@ public class AdminActions {
 
                 }
 //                Or get other needed details
-                ArrayList<Theatres> theatres = new ArrayList<>();
                 System.out.print("Enter No.of.Screens to add: ");// get the no of screens in theatre
                 int noOfScreens = Integer.parseInt(s.nextLine());
+                HashMap<String,Screens> screensHashMap = new HashMap<>();
                 for(int i = 1;i<=noOfScreens;i++) // loop as many screens need to add (EG: if 2 screens then 2 times)
                 {
                     enterNameOfScreen:while (true)
                     {
                         System.out.print("Enter the Name of Screen "+ i +": ");//get the name of screen i
                         String screenName = s.nextLine();
-                        var checkScreenAlreadyAvailable = BookMyShow.getTheatreNameAndTheatres().get(theatreName);
+                        var checkScreenAlreadyAvailable = BookMyShow.getTheatreNameAndTheatre().get(theatreName);
                         System.out.print("Enter the number of seats :");// get the number of seats in that screen
                         long numberOfSeats = Long.parseLong(s.nextLine());
                         System.out.print("Enter the Grid (How the seats have to be eg:2*8*2) : "); // get the grid how the seats have to be displayed
                         String grid = s.nextLine();
-
                         var seatsAndGrids = Utilities.generateGrids(numberOfSeats,grid); // storing seats and grids as HASHMAP by calling a helper function from utilities
                         System.out.println("The seats are as follows..");// display that seats
                         for(var seats:seatsAndGrids.entrySet())
@@ -145,21 +144,26 @@ public class AdminActions {
                             System.out.println(seats.getKey()+" "+seats.getValue());
                         }
                         Screens screenObj = new Screens(screenName,numberOfSeats,seatsAndGrids);
-                        HashMap<String,Screens> screensHashMap = new HashMap<>();
+
                         screensHashMap.put(screenName,screenObj);
-                        for(Theatres theatreToCheck:checkScreenAlreadyAvailable)
+                        if(checkScreenAlreadyAvailable!=null)
                         {
-                            if(theatreToCheck.getScreenNameAndObject().get(screenName).equals(screenName))
-                            {
-                                System.out.println("Screen already exists...");
-                                continue enterNameOfScreen;
-                            }
+                                var screenKeys = checkScreenAlreadyAvailable.getScreenNameAndObject().keySet();
+                                for(var screenKeyName:screenKeys)
+                                {
+                                    if(screenKeyName.equals(screenName))
+                                    {
+                                        System.out.println("Screen already exists...");
+                                        continue enterNameOfScreen;
+                                    }
+                                }
                         }
-                        theatres.add(new Theatres(theatreName,screensHashMap,locationOfTheatre));
-                        BookMyShow.getTheatreNameAndTheatres().put(theatreName,theatres);
+                        break;
                     }
 
                 }
+                Theatres theatres = new Theatres(theatreName,screensHashMap,locationOfTheatre);
+                BookMyShow.getTheatreNameAndTheatre().put(theatreName,theatres);
 //                after all the for loop iteration
                 System.out.println("Theatre Added Successfully");
                 break;
@@ -171,152 +175,100 @@ public class AdminActions {
 //  Function to add the movies
     private static void addMovies()
     {
-        Scanner s = new Scanner(System.in);
-        System.out.println("Available locations to add movie... ");// show available locations
-        String locationOfMovie = "";
+       Scanner s = new Scanner(System.in);
+
+        System.out.println("Available locations to add movies... ");// show available locations
         for(String locations:BookMyShow.getLocations())
         {
             System.out.println("* "+locations);
         }
+        String locationOfTheatre = null;
         while (true)// infinite loop to ask user to enter correct location
         {
-            System.out.print("Enter the location where to add the movie :");// ask location where to add the theatre
-            locationOfMovie = s.nextLine();
-            if (!BookMyShow.getLocations().contains(locationOfMovie))// if that location not found in location arraylist
+            System.out.print("Enter the Location where to add the movies :");// ask location where to add the theatre
+            locationOfTheatre = s.nextLine();
+            if (!BookMyShow.getLocations().contains(locationOfTheatre)) // if that location not found in location arraylist
             {
-                System.out.println("No location found...");
+                System.out.println("No Locations Found");
+                continue;
             }
-            else// if that location is there then break the loop
-            {
-                break;
-            }
-
+            break;
         }
-//        After the loop
-                System.out.print("Enter the movie name to add : ");// get the movie name
+             // if that location is there then ask the movie name
+                System.out.print("Enter the Movie name to add : ");// get movie name
                 String movieName = s.nextLine();
-                var movieList = BookMyShow.getMovieNameAndMovies();
-
+                System.out.print("Enter the Date of the movie (dd-mm-yyyy): ");
+                LocalDate dateOfMovie = LocalDate.parse(s.nextLine(),BookMyShow.getFormatter());
+                System.out.print("Enter the Duration of the movie : ");
+                long duration = Long.parseLong(s.nextLine());
+                System.out.println("Available Theatres :");
+                for(var theatres:BookMyShow.getTheatreNameAndTheatre().keySet())
+                {
+                    if(BookMyShow.getTheatreNameAndTheatre().get(theatres).getLocation().equals(locationOfTheatre))
+                    {
+                        System.out.println("* "+ theatres);
+                    }
+                }
+                System.out.print("Enter the theatre where to add the movie : ");
+                String theatreOfMovie = s.nextLine();
+                for(var theatres:BookMyShow.getTheatreNameAndTheatre().keySet())
+                {
+                    if(!theatres.equals(theatreOfMovie))
+                    {
+                        System.out.println("No theatres found..");
+                        return;
+                    }
+                }
+                Theatres theatres = BookMyShow.getTheatreNameAndTheatre().get(theatreOfMovie);
+                System.out.println("Available Screens...!!");
+                for(var screens:theatres.getScreenNameAndObject().keySet())
+                {
+                    System.out.println("* "+screens);
+                }
+                System.out.print("Enter the screen name to add : ");
+                String screenNameForMovie = s.nextLine();
+                Screens screen = null;
+                for(var screens:theatres.getScreenNameAndObject().keySet())
+                {
+                    if(screens.equals(screenNameForMovie))
+                    {
+                        screen = theatres.getScreenNameAndObject().get(screens);
+                    }
+                }
+                if(screen==null)
+                {
+                    System.out.println("No screens found..!");
+                    return;
+                }
+                System.out.print("Enter the start time of the Show (hh:mm) : ");
+                LocalTime startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
+                LocalTime endTime = startTime.plusMinutes(duration + 30);
+                Shows currentShow = new Shows(movieName,dateOfMovie,startTime,endTime);
+                screen.getShowsInScreen().add(currentShow);
+                Movies currentMovie = new Movies(movieName,locationOfTheatre,dateOfMovie,duration,theatres,screen,currentShow);
+                var movieList = BookMyShow.getMovieNameAndMovies().get(movieName);
                 if(movieList==null)
                 {
-
+                    movieList = new ArrayList<>();
                 }
-                for(Movies movies:BookMyShow.getMovies())// loop over all the movies available
+                for(Movies movieObj:movieList)
                 {
-                    if(movies.getName().equals(movieName) && movies.getLocation().equals(locationOfMovie))// check if the same movie already available in that location
+                    if(movieObj.getDate().isEqual(dateOfMovie) &&
+                            movieObj.getDuration()==duration &&
+                            movieObj.getLocation().equals(locationOfTheatre) &&
+                            movieObj.getTheatre().getName().equals(theatreOfMovie) &&
+                            movieObj.getScreen().getNameOfScreen().equals(screenNameForMovie) &&
+                            (startTime.isBefore(movieObj.getShow().getStartTime()) || startTime.isAfter(movieObj.getShow().getEndTime())) && (endTime.isBefore(movieObj.getShow().getStartTime()) || endTime.isAfter(movieObj.getShow().getEndTime())))
                     {
-                        System.out.println("Movie already available..");
+                        System.out.println("Movie already exists..");
                         return;
                     }
                 }
-//                if movie not available then get further details
-                System.out.print("Enter the date of showing of the movie : "); // get start date of movie
-                LocalDate dateOfMovie = LocalDate.parse(s.nextLine(),BookMyShow.getFormatter());
-                System.out.print("Enter the duration of the movie : "); // get the duration of the movie
-                long duration = Long.parseLong(s.nextLine());
-                System.out.println("Available Theatres..."); // print all the available theatres
-                for(Theatres theatres:BookMyShow.getTheatres()) // loop over all the available theatres
-                {
-                    if(theatres.getLocation().equals(locationOfMovie)) // print theatres in that location
-                    {
-                        System.out.println("* " + theatres.getName());
-                    }
-                }
-                System.out.println("--------------------------");
-
-                    System.out.println("Enter the theatre to add the movie : ");// ask the theatre where to add the movie
-                    String movieToAddInTheatre = s.nextLine();
-                    Theatres currentTheatre = null; // initialising a Theatre reference to null for below usage
-
-                    for(Theatres theatres:BookMyShow.getTheatres())// loop over all the theatres
-                    {
-                        if (theatres.getLocation().equals(locationOfMovie))// go into theatres in that location
-                        {
-                            if (movieToAddInTheatre.equals(theatres.getName())) // if theatre entered matches the theatre object's name
-                            {
-                                currentTheatre = theatres; // re-assign current theatre with the theatre object
-                                break;
-                            }
-                        }
-                    }
-
-                    if(currentTheatre==null) // after the for-loop if still the object is null then return
-                    {
-                        System.out.println("You entered wrong theatre");
-                        return;
-                    }
-//                    if theatre object found then
-                    System.out.println("Available screens.."); // print available screens
-                    for(Screens screens:currentTheatre.getScreens())// loop over all the screens in theatre
-                    {
-                        System.out.println("* "+screens.getNameOfScreen());
-                    }
+                movieList.add(currentMovie);
+                BookMyShow.getMovieNameAndMovies().put(movieName,movieList);
+                System.out.println("Movie added successfully in "+theatreOfMovie+" on "+dateOfMovie.format(BookMyShow.getFormatter())+" at "+startTime.format(BookMyShow.getTimeFormatter()));
 
 
-                    while (true)// infinite loop to ask date
-                    {
-                            System.out.println("Movie is available in the following dates..."); // print all the available dates
-                            for(LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) // loop from start date to end date
-                            {
-                                System.out.println("* "+date.format(BookMyShow.getFormatter()));
-                            }
-
-                                System.out.println("Enter the date when to set the show : "); // get the date when to set the show
-                                LocalDate dateChoice = LocalDate.parse(s.nextLine(),BookMyShow.getFormatter());
-                                if((dateChoice.isAfter(startDate) && dateChoice.isBefore(endDate)) || (dateChoice.isEqual(startDate) || dateChoice.isEqual(endDate)))// if entered date is in the available dates
-                                {
-                                    System.out.println("Available screens.."); // print available screens
-                                    for(Screens screens:currentTheatre.getScreens())// loop over all the screens in theatre
-                                    {
-                                        System.out.println("* "+screens.getNameOfScreen());
-                                    }
-                                    System.out.println("Enter the screen where you want to add the movie : "); // get the screen name where to add the show
-                                    String screenToAddMovie = s.nextLine();
-                                    screensLogic:for(Screens screens:currentTheatre.getScreens()) // loop over screens to check availability and add show
-                                        if(screens.getNameOfScreen().equals(screenToAddMovie))// if that screen available in theatre
-                                        {
-                                            System.out.println("Enter the start time of the show (HH:mm): "); // get the start time
-                                            LocalTime startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
-                                            LocalTime endTime = startTime.plusMinutes(duration+30); // calculate end time with start time
-                                            if(screens.getShowsInScreen().isEmpty()) // if shows inside screen is empty
-                                            {
-                                                screens.getShowsInScreen().add(new Shows(movieName,dateChoice,startTime,endTime)); // add new show directly
-                                                System.out.println("Movie added successfully..in theatre "+currentTheatre.getName()+" for screen "+screens.getNameOfScreen()+" for show "+startTime);
-                                                break;
-                                            }
-                                            for(Shows shows:screens.getShowsInScreen())// loop over shows to check existing shows
-                                            {
-                                                if(shows.getDateOfShow().isEqual(dateChoice))// if show object's date and entered date equals
-                                                {
-//                                                    ----------------------------------
-//                                                    problem in this logic have to solve
-//                                                    ----------------------------------
-                                                    if((startTime.isBefore(shows.getStartTime()) && endTime.isBefore(shows.getStartTime())) || (startTime.isAfter(shows.getEndTime()) && endTime.isAfter(shows.getEndTime()))) // check existing show and add show without any repetition
-                                                    {
-                                                        screens.getShowsInScreen().add(new Shows(movieName,dateChoice,startTime,endTime));
-                                                        System.out.println("Movie added successfully..in theatre "+currentTheatre.getName()+" for screen "+screens.getNameOfScreen()+" for show "+startTime);
-                                                        break screensLogic;
-                                                    }
-
-                                                }
-                                            }
-                                            System.out.println("Show already exists in this time..."); // or show already exists
-                                        }
-                                    System.out.println("Do you want to set show for another/same date..?? (y/n) : "); // ask admin wheteher to set another show
-                                    String choice = s.nextLine();
-                                    if(choice.equals("y"))//if yes then while continues
-                                    {
-                                        continue;
-                                    }
-//                                    or breaks
-                                    break;
-                                }
-//                                If date does not match
-                                else
-                                {
-                                    System.out.println("Enter correct date...");
-                                }
-                    }
     }
 
 
@@ -324,14 +276,26 @@ public class AdminActions {
     private static void viewMovies()
     {
         System.out.println("---------------------\n");
-        for(Movies movies:BookMyShow.getMovies()) // loop over all the movie object from BookMyShow
+        var keySet = BookMyShow.getMovieNameAndMovies().keySet();
+        if(keySet==null)
         {
-            System.out.println("Movie Name : "+movies.getName()); // print movie name
-            System.out.println("Location : "+movies.getLocation());// print movie location
-            System.out.println("Start Date : "+movies.getStartDate());// print start date of movie
-            System.out.println("End Date : "+movies.getEndDate());// print end date of movie
-            System.out.println("Duration : "+movies.getDuration());// print duration of movie
-            System.out.println("---------------------------");
+            System.out.println("No movies found...Add movie and try again");
+            return;
+        }
+        for(var movies:keySet)
+        {
+            System.out.println("Movie Name : "+movies);
+            var movieList = BookMyShow.getMovieNameAndMovies().get(movies);
+            for(Movies movieObj:movieList)
+            {
+                System.out.println("\n---------------------");
+                System.out.println("Location : "+ movieObj.getLocation());
+                System.out.println("Theatre : "+ movieObj.getTheatre().getName());
+                System.out.println("Date : "+ movieObj.getDate().format(BookMyShow.getFormatter()));
+                System.out.println("Show Start Time : "+movieObj.getShow().getStartTime().format(BookMyShow.getTimeFormatter()));
+                System.out.println("Show End Time : "+movieObj.getShow().getEndTime().format(BookMyShow.getTimeFormatter()));
+                System.out.println("\n---------------------");
+            }
         }
         System.out.println("\n---------------------");
 
@@ -342,26 +306,24 @@ public class AdminActions {
     {
         System.out.println("Available Theatres...");// print available theatres
         System.out.println("----------------------------");
-        for(var theatresAndObjects:BookMyShow.getTheatreNameAndTheatres())// loop over all the available theatres
+
+        for(var theatreName : BookMyShow.getTheatreNameAndTheatre().keySet())
         {
-            for(var theatres:BookMyShow.getTheatreNameAndTheatres().get(theatresAndObjects))
-            System.out.println("Name : "+theatres.getName()); // print theatre name
-            System.out.println("Location : "+theatres.getLocation()); // print theatre location
-            System.out.println("Available Screens.."); // print all the available screens
-            for (Screens screens:theatres.getScreens()) // loop over screens of theatre
+            System.out.println("Name : "+theatreName);
+            Theatres theatres = BookMyShow.getTheatreNameAndTheatre().get(theatreName);
+            System.out.println("Location : "+ theatres.getLocation());
+            for(var screens:theatres.getScreenNameAndObject().keySet())
             {
-                System.out.println("* "+screens.getNameOfScreen());
+                System.out.println("Screen Name : "+ screens);
+                System.out.println("Number of seats : "+theatres.getScreenNameAndObject().get(screens).getNumberOfSeats());
+                System.out.println("* "+theatres.getScreenNameAndObject().get(screens).getSeatsAndGrid());
             }
-            System.out.println("Movies Showing.."); // print all the movies showing in that theatre
-            for (Movies movies:theatres.getMovies()) // Loop over all the movies in the theatre
-            {
-                System.out.println("* "+movies.getName());
-            }
+        }
             System.out.println("\n----------------------------");
         }
-        System.out.println("----------------------------");
+
     }
-}
+
 
 
 
