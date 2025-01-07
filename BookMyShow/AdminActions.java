@@ -113,9 +113,9 @@ public class AdminActions {
             {
                 System.out.print("Enter the Theatre name to add : ");// get theatre name
                 String theatreName = s.nextLine();
-                for(Theatres theatres:BookMyShow.getTheatres())// loop over available theatres
+                for(var theatres:BookMyShow.getTheatreNameAndTheatre().keySet())// loop over available theatres
                 {
-                    if(theatres.getName().equals(theatreName))//If the name already exists then return
+                    if(theatres.equals(theatreName))//If the name already exists then return
                     {
                         System.out.println("Theatre already exists");
                         return;
@@ -244,7 +244,12 @@ public class AdminActions {
                 LocalTime startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
                 LocalTime endTime = startTime.plusMinutes(duration + 30);
                 Shows currentShow = new Shows(movieName,dateOfMovie,startTime,endTime);
-                screen.getShowsInScreen().add(currentShow);
+                if(screen.getShowsInScreen().contains(currentShow))
+                {
+                    System.out.println("Show already exists..");
+                    return;
+                }
+                screen.getShowsInScreen().add(currentShow); // calls hashCode and equals method which is overridden
                 Movies currentMovie = new Movies(movieName,locationOfTheatre,dateOfMovie,duration,theatres,screen,currentShow);
                 var movieList = BookMyShow.getMovieNameAndMovies().get(movieName);
                 if(movieList==null)
@@ -257,8 +262,7 @@ public class AdminActions {
                             movieObj.getDuration()==duration &&
                             movieObj.getLocation().equals(locationOfTheatre) &&
                             movieObj.getTheatre().getName().equals(theatreOfMovie) &&
-                            movieObj.getScreen().getNameOfScreen().equals(screenNameForMovie) &&
-                            (startTime.isBefore(movieObj.getShow().getStartTime()) || startTime.isAfter(movieObj.getShow().getEndTime())) && (endTime.isBefore(movieObj.getShow().getStartTime()) || endTime.isAfter(movieObj.getShow().getEndTime())))
+                            movieObj.getScreen().getNameOfScreen().equals(screenNameForMovie))
                     {
                         System.out.println("Movie already exists..");
                         return;

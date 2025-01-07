@@ -7,9 +7,7 @@ import java.util.HashMap;
 public class BookMyShow {
     private static ArrayList<User> users= new ArrayList<>();
     private static ArrayList<Admin> admins= new ArrayList<>();
-    private static ArrayList<Theatres> theatres = new ArrayList<>();
     private static ArrayList<String> locations = new ArrayList<>();
-    private static ArrayList<Movies> movies = new ArrayList<>();
     // private static HashMap<String,ArrayList<Theatres>> locationAndTheatres = new HashMap<String,ArrayList<Theatres>>();
     // private static HashMap<String,ArrayList<Movies>> locationAndMovies = new HashMap<String,ArrayList<Movies>>();
     private static HashMap<String,Theatres> theatreNameAndTheatre = new HashMap<>();
@@ -21,9 +19,6 @@ public class BookMyShow {
         return BookMyShow.admins;
     }
 
-    public static ArrayList<Movies> getMovies() {
-        return movies;
-    }
 
     public static HashMap<String, ArrayList<Movies>> getMovieNameAndMovies() {
         return movieNameAndMovies;
@@ -46,10 +41,6 @@ public class BookMyShow {
 
     public static ArrayList<String> getLocations() {
         return locations;
-    }
-
-    public static ArrayList<Theatres> getTheatres() {
-        return theatres;
     }
 
 //    public static HashMap<String, ArrayList<Theatres>> getLocationAndTheatres() {

@@ -2,12 +2,14 @@ package BookMyShow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Objects;
 
 public class Screens {
     private String nameOfScreen;
     private long numberOfSeats;
     private HashMap<Character, ArrayList<String>> seatsAndGrid = new HashMap<>();
-    private ArrayList<Shows> showsInScreen = new ArrayList<>();
+    private HashSet<Shows> showsInScreen = new HashSet<>();
 
     public Screens (String nameOfScreen, long numberOfSeats, HashMap<Character,ArrayList<String>> seatsAndGrid)
     {
@@ -19,7 +21,7 @@ public class Screens {
         return nameOfScreen;
     }
 
-    public ArrayList<Shows> getShowsInScreen() {
+    public HashSet<Shows> getShowsInScreen() {
         return showsInScreen;
     }
 
@@ -42,4 +44,5 @@ public class Screens {
     public void setSeatsAndGrid(HashMap<Character, ArrayList<String>> seatsAndGrid) {
         this.seatsAndGrid = seatsAndGrid;
     }
+
 }

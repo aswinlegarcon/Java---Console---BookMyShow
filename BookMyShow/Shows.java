@@ -2,6 +2,7 @@ package BookMyShow;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Shows {
 
@@ -31,5 +32,16 @@ public class Shows {
 
     public String getMovieName() {
         return movieName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Shows show = (Shows) obj;
+        return startTime.equals(show.startTime) && endTime.equals(show.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startTime,endTime);
     }
 }
