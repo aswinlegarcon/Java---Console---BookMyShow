@@ -21,12 +21,10 @@ public class AdminActions {
         {
             if(adminToCheck.getUserName().equals(userName) && adminToCheck.getPassword().equals(password)) // if both username and password is same then return admin object
             {
-                System.out.println("Login Success...!!");
                 return adminToCheck;
             }
             else if(adminToCheck.getUserName().equals(userName) && !adminToCheck.getPassword().equals(password))// if password alone wrong then return username null
             {
-                System.out.println("Invalid Username or Password....Try Again");
                 return new Admin(null,null);
             }
 
@@ -243,7 +241,16 @@ public class AdminActions {
                 System.out.print("Enter the start time of the Show (hh:mm) : ");
                 LocalTime startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
                 LocalTime endTime = startTime.plusMinutes(duration + 30);
-                Shows currentShow = new Shows(movieName,dateOfMovie,startTime,endTime);
+                for(var show : screen.getShowsInScreen())
+                {
+                    if((startTime.isBefore(show.getStartTime()) || endTime.isBefore(show.getStartTime())) &&
+                            (startTime.isAfter(show.getEndTime()) || endTime.isAfter(show.getEndTime())) && dateOfMovie.isEqual(show.getDateOfShow()))
+                    {
+                        System.out.println("Show already exists..");
+                        return;
+                    }
+                }
+                Shows currentShow = new Shows(dateOfMovie,startTime,endTime);
                 if(screen.getShowsInScreen().contains(currentShow))
                 {
                     System.out.println("Show already exists..");
@@ -255,18 +262,6 @@ public class AdminActions {
                 if(movieList==null)
                 {
                     movieList = new ArrayList<>();
-                }
-                for(Movies movieObj:movieList)
-                {
-                    if(movieObj.getDate().isEqual(dateOfMovie) &&
-                            movieObj.getDuration()==duration &&
-                            movieObj.getLocation().equals(locationOfTheatre) &&
-                            movieObj.getTheatre().getName().equals(theatreOfMovie) &&
-                            movieObj.getScreen().getNameOfScreen().equals(screenNameForMovie))
-                    {
-                        System.out.println("Movie already exists..");
-                        return;
-                    }
                 }
                 movieList.add(currentMovie);
                 BookMyShow.getMovieNameAndMovies().put(movieName,movieList);
@@ -296,6 +291,7 @@ public class AdminActions {
                 System.out.println("Location : "+ movieObj.getLocation());
                 System.out.println("Theatre : "+ movieObj.getTheatre().getName());
                 System.out.println("Date : "+ movieObj.getDate().format(BookMyShow.getFormatter()));
+                System.out.println("Screen : "+ movieObj.getScreen().getNameOfScreen());
                 System.out.println("Show Start Time : "+movieObj.getShow().getStartTime().format(BookMyShow.getTimeFormatter()));
                 System.out.println("Show End Time : "+movieObj.getShow().getEndTime().format(BookMyShow.getTimeFormatter()));
                 System.out.println("\n---------------------");
