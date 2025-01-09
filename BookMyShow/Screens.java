@@ -8,8 +8,8 @@ import java.util.Objects;
 public class Screens {
     private String nameOfScreen;
     private long numberOfSeats;
-    private HashMap<Character, ArrayList<String>> seatsAndGrid = new HashMap<>();
-    private HashSet<Shows> showsInScreen = new HashSet<>();
+    private HashMap<Character, ArrayList<String>> seatsAndGrid = new HashMap<>(); // to store seats pattern
+    private HashSet<Shows> showsInScreen = new HashSet<>(); // to store shows running in the screen
 
     public Screens (String nameOfScreen, long numberOfSeats, HashMap<Character,ArrayList<String>> seatsAndGrid)
     {

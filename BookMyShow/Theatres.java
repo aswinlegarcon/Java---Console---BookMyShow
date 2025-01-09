@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Theatres {
     private String name;
-    private HashMap<String,Screens> screenNameAndObject = new HashMap<>();
+    private HashMap<String,Screens> screenNameAndObject = new HashMap<>(); // to store screens in theatres
     private String location ;
 
     public Theatres(String name, HashMap<String,Screens> screenNameAndObject, String location)
@@ -31,16 +31,4 @@ public class Theatres {
         return location;
     }
 
-    //    public void setLocation(String location) {
-//        this.location = location;
-//    }
-//
-//    public String getLocation() {
-//        return location;
-//    }
-//
-
-//    public void setMovies(ArrayList<String> movies) {
-//        this.movies = movies;
-//    }
 }
