@@ -3,20 +3,23 @@ package BookMyShow;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Shows {
 
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate dateOfShow;
+    private Screens screen;
 //    private String movieName;
 
-    public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime)
+    public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime, Screens screen)
     {
 //        this.movieName = movieName;
         this.dateOfShow = dateOfShow;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.screen = screen;
     }
 
     public LocalDate getDateOfShow() {
@@ -30,13 +33,21 @@ public class Shows {
         return endTime;
     }
 
-//    public String getMovieName() {
+    public Screens getScreens() {
+        return screen;
+    }
+
+    //    public String getMovieName() {
 //        return movieName;
 //    }
 
 
+    @Override
+    public String toString() {
+        return " * " + startTime.toString() ;
+    }
 
-  /* Overriding equals method from object class
+    /* Overriding equals method from object class
   * to do check show already exist in same time,date
   *
   * This method is called everytime when the add() or contains() is called with the Hashset<Shows>*/

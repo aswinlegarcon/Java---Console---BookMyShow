@@ -55,4 +55,6 @@ public class Movies {
     public long getDuration() {
         return duration;
     }
+
+
 }

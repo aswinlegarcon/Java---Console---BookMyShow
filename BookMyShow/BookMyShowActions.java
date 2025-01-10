@@ -1,5 +1,7 @@
 package BookMyShow;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class BookMyShowActions {
@@ -70,8 +72,11 @@ public class BookMyShowActions {
                     }
                     else if(currentUser!=null) // if vaild credentials then call show movies
                     {
-                        String userMovie = UserActions.showMovies(currentUser);
-                        break;
+                        ArrayList<Movies> userMovie = UserActions.showMovies(currentUser);
+                        if(!userMovie.isEmpty())
+                        {
+                            UserActions.doOperations(currentUser,userMovie);
+                        }
                     }
 
                     break;

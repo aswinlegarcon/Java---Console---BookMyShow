@@ -240,7 +240,7 @@ public class AdminActions {
                         return;
                     }
                 }
-                Shows currentShow = new Shows(dateOfMovie,startTime,endTime);  // if no show already exist then create a show object
+                Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen);  // if no show already exist then create a show object
                 if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
                 {
                     System.out.println("Show already exists..");
@@ -266,7 +266,7 @@ public class AdminActions {
     {
         System.out.println("---------------------\n");
         var keySet = BookMyShow.getMovieNameAndMovies().keySet(); // get the keys from the hashmap
-        if(keySet==null) // if it is null
+        if(keySet.isEmpty()) // if it is null
         {
             System.out.println("No movies found...Add movie and try again");
             return;
