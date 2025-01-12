@@ -72,10 +72,23 @@ public class BookMyShowActions {
                     }
                     else if(currentUser!=null) // if vaild credentials then call show movies
                     {
-                        ArrayList<Movies> userMovie = UserActions.showMovies(currentUser);
-                        if(!userMovie.isEmpty())
+                        UserActions.showMovies(currentUser);
+                        main:while (true)
                         {
-                            UserActions.doOperations(currentUser,userMovie);
+                        System.out.println("Enter the option what to do \n 1.Continue Booking Tickets \n 2.View All Tickets \n 3.Logout");
+                        int choiceToDo = Integer.parseInt(s.nextLine());
+                                switch (choiceToDo)
+                                {
+                                    case 1:
+                                        UserActions.showMovies(currentUser);
+                                        break;
+                                    case 2:
+                                        UserActions.viewTickets(currentUser);
+                                        break;
+                                    case 3:
+                                        System.out.println("Logging out..");
+                                        break main;
+                                }
                         }
                     }
 

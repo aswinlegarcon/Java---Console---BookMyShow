@@ -1,10 +1,13 @@
 package BookMyShow;
 
+import java.util.ArrayList;
+
 public class User {
     private String userName;
     private String password;
     private String name;
     private String location;
+    private ArrayList<Ticket> tickets = new ArrayList<>();
 
     public User(String userName, String password, String name, String location)
     {
@@ -39,6 +42,10 @@ public class User {
 
     public String getLocation() {
         return location;
+    }
+
+    public ArrayList<Ticket> getTickets() {
+        return tickets;
     }
 
     public void setLocation(String location) {

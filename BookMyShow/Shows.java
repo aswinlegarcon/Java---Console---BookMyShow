@@ -11,15 +11,17 @@ public class Shows {
     private LocalTime endTime;
     private LocalDate dateOfShow;
     private Screens screen;
-//    private String movieName;
+    private int price;
+    //private String movieName;
 
-    public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime, Screens screen)
+    public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime, Screens screen,int price)
     {
-//        this.movieName = movieName;
+       // this.movieName = movieName;
         this.dateOfShow = dateOfShow;
         this.startTime = startTime;
         this.endTime = endTime;
         this.screen = screen;
+        this.price = price;
     }
 
     public LocalDate getDateOfShow() {
@@ -35,6 +37,10 @@ public class Shows {
 
     public Screens getScreens() {
         return screen;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     //    public String getMovieName() {

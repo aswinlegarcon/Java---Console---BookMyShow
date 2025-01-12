@@ -192,6 +192,8 @@ public class AdminActions {
                 LocalDate dateOfMovie = LocalDate.parse(s.nextLine(),BookMyShow.getFormatter()); // change date as per needed format dd-mm-yyyy
                 System.out.print("Enter the Duration of the movie : "); // get the duration of movie
                 long duration = Long.parseLong(s.nextLine());
+                System.out.print("Enter the price of the Movie : ");
+                int priceOfMovie = Integer.parseInt(s.nextLine());
                 System.out.println("Available Theatres :"); // print all the available theatres
                 for(var theatres:BookMyShow.getTheatreNameAndTheatre().keySet())
                 {
@@ -240,7 +242,7 @@ public class AdminActions {
                         return;
                     }
                 }
-                Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen);  // if no show already exist then create a show object
+                Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen,priceOfMovie);  // if no show already exist then create a show object
                 if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
                 {
                     System.out.println("Show already exists..");

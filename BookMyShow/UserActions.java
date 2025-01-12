@@ -50,14 +50,41 @@ public class UserActions {
 
     }
 
+//    Function to view all the tickets owned by user
+    public static void viewTickets(User currentUser)
+    {
+        var ticketsOfUser = currentUser.getTickets();
+        System.out.println("Tickets of User : ");
+        for(Ticket ticket:ticketsOfUser)
+        {
+            System.out.println();
+            System.out.println("------------------------------------------------|");
+            System.out.println("---"+ticket.getTheatreName()+"---               |");
+            System.out.println("---"+ticket.getScreenName()+"---                |");
+            System.out.println("---"+ticket.getMovieName()+"---                |");
+            System.out.println("Date of Movie : "+ticket.getDateOfShow().format(BookMyShow.getFormatter())+"  |");
+            System.out.println("Show Time : "+ticket.getTimeOfShow().format(BookMyShow.getTimeFormatter())+"  |");
+            System.out.println("Total no of Tickets : "+ticket.getNoOfTickets()+"  |");
+            System.out.println("Tickets : "+ticket.getSeatNumbers()+"  |");
+            System.out.println("Total amount paid : "+ticket.getPrice()+"  |");
+            System.out.println("-----------------------");
+            System.out.println("-|||||||||||||||||||||-");
+            System.out.println("-|||||||-----|||||||||-");
+            System.out.println("-|||||||||||||||||||||-");
+            System.out.println("-||||||-------||||||||-");
+            System.out.println("------------------------------------------------|");
+        }
+    }
+
+
 //    Operations that can be done by users
-    public static void doOperations(User currentUser,ArrayList<Movies> movies)
+    public static void doOperations(User currentUser,ArrayList<Movies> movies,LocalDate currentDate)
     {
         Scanner s = new Scanner(System.in);
-        LocalDate currentDate = LocalDate.now();
         System.out.println("The movie availability is as below : ");
         System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter())); // print the current date
         HashMap<String,HashSet<Shows>> theatreAgainstShows = new HashMap<>(); // A hashmap to store theatre name - Shows in that theatre
+        String movieName = null;
         for(Movies movie : movies) // loop over all the movie objects of movie user selected
         {
             if(theatreAgainstShows.containsKey(movie.getTheatre().getName())) // if the hashmap contains theatre name already
@@ -70,27 +97,32 @@ public class UserActions {
                 shows.add(movie.getShow()); // add the show into hashset
                 theatreAgainstShows.put(movie.getTheatre().getName(), shows); // put the theatre name and shows inside the hashmap
             }
+            movieName = movie.getName();
         }
        for(String theatreName : theatreAgainstShows.keySet()) // loop over hashmap to take keys
        {
            System.out.println("Theatre : "+theatreName); // print theatre name
            System.out.println("Shows : "+theatreAgainstShows.get(theatreName).toString()); // print all the show start time in the theatre by overriding toString
        }
-        while (true)
-        {
-            System.out.println("\nEnter the theatre name to book movie : "); // get the theatre name
-            String theatreName = s.nextLine();
-            System.out.println("Enter the show time : "); // get the showtime
-            LocalTime time = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
-            var shows = theatreAgainstShows.get(theatreName); // get the Hashset Shows of theatre
-            if(shows == null)
-            {
+       HashSet<Shows> shows = new HashSet<>();
+       LocalTime time = null;
+        String theatreName = null;
+        while (true) {
+            System.out.print("\nEnter the theatre name to book movie : "); // get the theatre name
+            theatreName = s.nextLine();
+            System.out.print("Enter the show time : "); // get the showtime
+            time = LocalTime.parse(s.nextLine(), BookMyShow.getTimeFormatter());
+            shows =  theatreAgainstShows.get(theatreName);// get the Hashset Shows of theatre
+            if (shows == null) {
                 System.out.println("Enter correct theatre...");
+                continue;
             }
+            break;
+        }
             Shows currentShow = null; // initially assign show object to null for future usage
             for(Shows show : shows) // loop over all the show object
             {
-                if(show.getStartTime().equals(time)) // get the current show object that user entered by checking the start time
+                if(show.getDateOfShow().equals(currentDate) && show.getStartTime().equals(time)) // get the current show object that user entered by checking the start time
                 {
                     currentShow = show; // reassign the loop object to currentshow
                 }
@@ -104,31 +136,101 @@ public class UserActions {
                 System.out.println("-------------- "+currentShow.getScreens().getNameOfScreen()+" ------------------"); // print the screen name
                 System.out.println("------- Total Seats : "+currentShow.getScreens().getNumberOfSeats()+" ------------------"); // print the total seats
                 var seatsAndGrids = currentShow.getScreens().getSeatsAndGrid(); // get the seats and grids hashmap and store it
+                HashMap<Character,ArrayList<String>> duplicateSeatsAndGrids = new HashMap<>();
                 System.out.println("The seats are as follows..");// display that seats
                         for(var seats:seatsAndGrids.entrySet()) // loop over hashmap as key-value
                         {
-                            System.out.println(seats.getKey()+" "+seats.getValue()); // print the key and the value
+                            System.out.println("Row : "+seats.getKey()+" "+seats.getValue()); // print the key and the value
                         }
+                        System.out.print("Enter how many seats to book : ");
+                        int noOfSeats = Integer.parseInt(s.nextLine());
+                        int noOfTickets = noOfSeats;
+                        int totalAmount = currentShow.getPrice()*noOfSeats;
+                        int seatCount = 1;
+                        HashSet<String> totalSeatNumbers = new HashSet<>();
+                        while (noOfSeats>0)
+                        {
+                            System.out.print("Enter the seatNo where to book the seat "+seatCount+" (A1,B4,C2): ");
+                            String rowToBook = s.nextLine();
+                            char row = rowToBook.charAt(0);
+                            int seatNo = Integer.parseInt(rowToBook.substring(1));
+                            if(!currentShow.getScreens().getSeatsAndGrid().containsKey(row))
+                            {
+                                System.out.println("Row not available enter correct row..");
+                                continue;
+                            }
+                            var rowToDisplay = currentShow.getScreens().getSeatsAndGrid().get(row);
+                            var seatToBook = currentShow.getScreens().getSeatsAndGrid().get(row).get(seatNo-1);
+                            if(seatToBook.equals("X"))
+                            {
+                                System.out.println("Seat already booked..");
+                                continue;
+                            }
+                            if (seatToBook.equals(" <SPACE> "))
+                            {
+                                seatNo = seatNo+1;
+//                                we have to change the seat number if space occurs
+//                                rowToBook =
+                            }
+                            System.out.print("Are you sure do you want to book a ticket at "+rowToBook+": (y/n) : ");
+                            String ticketConfirmChoice = s.nextLine();
+                            if(ticketConfirmChoice.equalsIgnoreCase("y"))
+                            {
+                                currentShow.getScreens().getSeatsAndGrid().get(row).set(seatNo-1,"X");
+                                System.out.println(rowToDisplay);
+                                System.out.println("Seat "+seatCount+" booked at "+rowToBook+"..");
+                                noOfSeats--;
+                                seatCount++;
+                            }
+                            else if(ticketConfirmChoice.equalsIgnoreCase("n"))
+                            {
+                                System.out.println("Canceled Booking..");
+                                continue;
+                            }
+                            else
+                            {
+                                System.out.println("Enter correct input..");
+                                continue;
+                            }
+
+                            totalSeatNumbers.add(rowToBook);
+                        }
+                        System.out.println("Payment of Rs : "+totalAmount+" has been made");
+//                        adding ticket object
+                        currentUser.getTickets().add(new Ticket(theatreName,movieName,currentShow.getScreens().getNameOfScreen(),currentDate,time,noOfTickets,totalSeatNumbers,currentShow.getPrice()*noOfTickets));
+//                  Ticket printing
+                System.out.println("Your ticket is as below..");
+                System.out.println();
+                System.out.println("----------------------------");
+                System.out.println("----------------------------");
+                System.out.println("---"+theatreName+"---");
+                System.out.println("---"+ currentShow.getScreens().getNameOfScreen()+"---");
+                System.out.println("---"+movieName+"---");
+                System.out.println("Date of Movie : "+currentDate.format(BookMyShow.getFormatter()));
+                System.out.println("Show Time : "+time.format(BookMyShow.getTimeFormatter()));
+                System.out.println("Total no of Tickets : "+noOfTickets);
+                System.out.println("Tickets : "+totalSeatNumbers);
+                System.out.println("Total amount paid : "+totalAmount);
+                System.out.println("----------------------------");
+                System.out.println("----------------------------");
+
             }
 //            --------------------
 //            Add other operations here
 //            ------------------
-            break;
-        }
-
-
 
     }
 
+//    Helper method for doOperations function to send the movie object list in which the operations need to be perfomed
 // Method to show all the movies
-    public static ArrayList<Movies> showMovies(User currentUser) {
+    public static void showMovies(User currentUser) {
         Scanner s = new Scanner(System.in);
-        HashMap<String,ArrayList<Movies>> moviesForUser = new HashMap<>();
         ArrayList<Movies> movies = new ArrayList<>();
         HashSet<String> moviesInUserArea = new HashSet<>();
         LocalDate currentDate = LocalDate.now();
         LocalDate userDate = currentDate;
-        while (true) {
+        while (true)
+        {
             System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter()));
             System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter()));
             System.out.println("Current location : "+ currentUser.getLocation());
@@ -145,7 +247,7 @@ public class UserActions {
             }
             else if(status)
             {
-                System.out.println("Enter the movie name to book (enter 'change' to change your preferences): ");
+                System.out.print("Enter the movie name to book (enter 'change' to change your preferences): ");
                 String movieToBook = s.nextLine();
                 if(movieToBook.equals("change"))
                 {
@@ -154,7 +256,6 @@ public class UserActions {
                     {
                         userDate = tempDate;
                     }
-
                 }
                 else if(moviesInUserArea.contains(movieToBook))
                 {
@@ -170,11 +271,15 @@ public class UserActions {
             }
 
         }
-
-        return movies;
+        if(movies.isEmpty())
+        {
+            System.out.println("No Movies found in that date/location...");
+            return;
+        }
+        UserActions.doOperations(currentUser,movies,userDate);
     }
 
-
+//Helper function for showMovies to list all the movies
     private static boolean displayMovies(User currentUser, LocalDate dateOfUser , HashSet<String> moviesInUserArea)
     {
         boolean mainCheck = false;
@@ -199,6 +304,7 @@ public class UserActions {
         return mainCheck;
     }
 
+//    Helper method to showMovies method to change the location or date of the user
     private static LocalDate changePreferences(User currentUser, LocalDate currentDate)
     {
         Scanner s = new Scanner(System.in);
