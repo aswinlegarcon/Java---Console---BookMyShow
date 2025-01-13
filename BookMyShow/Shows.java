@@ -2,6 +2,8 @@ package BookMyShow;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -11,16 +13,19 @@ public class Shows {
     private LocalTime endTime;
     private LocalDate dateOfShow;
     private Screens screen;
+    private HashMap<Character, ArrayList<String>> seatsAndGrid = new HashMap<>();
     private int price;
+
     //private String movieName;
 
-    public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime, Screens screen,int price)
+    public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime, Screens screen,HashMap<Character, ArrayList<String>> seatsAndGrid,int price)
     {
        // this.movieName = movieName;
         this.dateOfShow = dateOfShow;
         this.startTime = startTime;
         this.endTime = endTime;
         this.screen = screen;
+        this.seatsAndGrid = seatsAndGrid;
         this.price = price;
     }
 
@@ -33,6 +38,10 @@ public class Shows {
 
     public LocalTime getEndTime() {
         return endTime;
+    }
+
+    public HashMap<Character, ArrayList<String>> getSeatsAndGrid() {
+        return seatsAndGrid;
     }
 
     public Screens getScreens() {

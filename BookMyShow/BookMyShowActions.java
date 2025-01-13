@@ -72,7 +72,7 @@ public class BookMyShowActions {
                     }
                     else if(currentUser!=null) // if vaild credentials then call show movies
                     {
-                        UserActions.showMovies(currentUser);
+                        UserActions.showMovies(currentUser); // show the movie
                         main:while (true)
                         {
                         System.out.println("Enter the option what to do \n 1.Continue Booking Tickets \n 2.View All Tickets \n 3.Logout");

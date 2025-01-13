@@ -142,7 +142,7 @@ public class AdminActions {
 //                        {
 //                            System.out.println(seats.getKey()+" "+seats.getValue());
 //                        }
-                        Screens screenObj = new Screens(screenName,numberOfSeats,seatsAndGrids); // creating new screen object with all details
+                        Screens screenObj = new Screens(screenName,numberOfSeats,grid,seatsAndGrids); // creating new screen object with all details
 
                         screensHashMap.put(screenName,screenObj); // adding screen object with nameofscreen,screenobj in hashmap
                         if(checkScreenAlreadyAvailable!=null) // if theatre object not null
@@ -232,6 +232,9 @@ public class AdminActions {
                 System.out.print("Enter the start time of the Show (hh:mm) : "); // get the start time
                 LocalTime startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
                 LocalTime endTime = startTime.plusMinutes(duration + 30); // calculate end time
+//                Making seats and grids for shows
+                var seatsAndGrids = Utilities.generateGrids(screen.getNumberOfSeats(),screen.getGrid());
+
                 for(var show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
                 {
 //                    Condition to check if the show is before old show timings or after the old show timings
@@ -242,7 +245,7 @@ public class AdminActions {
                         return;
                     }
                 }
-                Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen,priceOfMovie);  // if no show already exist then create a show object
+                Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen,seatsAndGrids,priceOfMovie);  // if no show already exist then create a show object
                 if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
                 {
                     System.out.println("Show already exists..");

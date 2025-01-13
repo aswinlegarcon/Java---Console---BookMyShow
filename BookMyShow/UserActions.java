@@ -135,48 +135,74 @@ public class UserActions {
             {
                 System.out.println("-------------- "+currentShow.getScreens().getNameOfScreen()+" ------------------"); // print the screen name
                 System.out.println("------- Total Seats : "+currentShow.getScreens().getNumberOfSeats()+" ------------------"); // print the total seats
-                var seatsAndGrids = currentShow.getScreens().getSeatsAndGrid(); // get the seats and grids hashmap and store it
+                var seatsAndGrids = currentShow.getSeatsAndGrid(); // get the seats and grids hashmap and store it
                 HashMap<Character,ArrayList<String>> duplicateSeatsAndGrids = new HashMap<>();
                 System.out.println("The seats are as follows..");// display that seats
                         for(var seats:seatsAndGrids.entrySet()) // loop over hashmap as key-value
                         {
-                            System.out.println("Row : "+seats.getKey()+" "+seats.getValue()); // print the key and the value
+                            System.out.println("Row : "+seats.getKey()+" "+seats.getValue());  // print the key and the value
                         }
-                        System.out.print("Enter how many seats to book : ");
+                        System.out.print("Enter how many seats to book : "); // get number of seats to book
                         int noOfSeats = Integer.parseInt(s.nextLine());
-                        int noOfTickets = noOfSeats;
-                        int totalAmount = currentShow.getPrice()*noOfSeats;
-                        int seatCount = 1;
-                        HashSet<String> totalSeatNumbers = new HashSet<>();
-                        while (noOfSeats>0)
+                        int noOfTickets = noOfSeats; // storing into another variable for passing into ticket object
+                        int totalAmount = currentShow.getPrice()*noOfSeats; // total amount of tickets
+                        int seatCount = 1; // Integer to print as Seat 1/Seat 2 etc
+                        HashSet<String> totalSeatNumbers = new HashSet<>(); // To store Total seats booked as A1 A2
+                        while (noOfSeats>0) // loops until no of seats greater than 0
                         {
-                            System.out.print("Enter the seatNo where to book the seat "+seatCount+" (A1,B4,C2): ");
+                            System.out.print("Enter the seatNo where to book the seat "+seatCount+" (A1,B4,C2): "); // get seat numbers
                             String rowToBook = s.nextLine();
-                            char row = rowToBook.charAt(0);
-                            int seatNo = Integer.parseInt(rowToBook.substring(1));
-                            if(!currentShow.getScreens().getSeatsAndGrid().containsKey(row))
+                            char row = rowToBook.charAt(0); // get the Row as A,B etc
+                            int seatNo = Integer.parseInt(rowToBook.substring(1)); // get the seat no in that row 1,2,10,6 etc
+                            if(!currentShow.getSeatsAndGrid().containsKey(row)) // if that row not in hashmap then print this
                             {
                                 System.out.println("Row not available enter correct row..");
                                 continue;
                             }
-                            var rowToDisplay = currentShow.getScreens().getSeatsAndGrid().get(row);
-                            var seatToBook = currentShow.getScreens().getSeatsAndGrid().get(row).get(seatNo-1);
+                            var rowToDisplay = currentShow.getSeatsAndGrid().get(row); // if row exist then get the row
+                            var gridAsString = currentShow.getScreens().getGrid().split("\\*"); // get the grid pattern from the screen and store it as String array
+                            int sumOfString = 0; // variable to calculate sum of grids
+                            for(String grid:gridAsString)
+                            {
+                                sumOfString = sumOfString + Integer.parseInt(grid); // calculating sum of grids
+                            }
+                            String seatToBook = null; // getting that seat to check already booked or available
+
+                            if(seatNo <= Integer.parseInt(gridAsString[0])) // if the seat.no less than first set of grid (before first space) eg: seat number <= 2
+                            {
+                                seatToBook = currentShow.getSeatsAndGrid().get(row).get(seatNo-1); // get the seat number as per index
+                            }
+                            else if(seatNo >= (sumOfString+1) - Integer.parseInt(gridAsString[2]))// if the seat.no greater than last space eg: seatNo >= 9
+                            {
+                                seatToBook = currentShow.getSeatsAndGrid().get(row).get(seatNo+1); // get the seat number plus 1 index
+                            }
+                            else if(seatNo > Integer.parseInt(gridAsString[0])) // if the seat is greater than 1st space eg : seatNo > 2
+                            {
+                                seatToBook = currentShow.getSeatsAndGrid().get(row).get(seatNo); // get the number as it is
+                            }
+
                             if(seatToBook.equals("X"))
                             {
                                 System.out.println("Seat already booked..");
                                 continue;
                             }
-                            if (seatToBook.equals(" <SPACE> "))
-                            {
-                                seatNo = seatNo+1;
-//                                we have to change the seat number if space occurs
-//                                rowToBook =
-                            }
                             System.out.print("Are you sure do you want to book a ticket at "+rowToBook+": (y/n) : ");
                             String ticketConfirmChoice = s.nextLine();
                             if(ticketConfirmChoice.equalsIgnoreCase("y"))
                             {
-                                currentShow.getScreens().getSeatsAndGrid().get(row).set(seatNo-1,"X");
+                                if(seatNo <= Integer.parseInt(gridAsString[0]))
+                                {
+                                    currentShow.getSeatsAndGrid().get(row).set(seatNo-1,"X");
+                                }
+                                else if(seatNo >= (sumOfString+1) - Integer.parseInt(gridAsString[2]))
+                                {
+                                    currentShow.getSeatsAndGrid().get(row).set(seatNo+1,"X");
+                                }
+                                else if(seatNo > Integer.parseInt(gridAsString[0]))
+                                {
+                                    currentShow.getSeatsAndGrid().get(row).set(seatNo,"X");
+                                }
+
                                 System.out.println(rowToDisplay);
                                 System.out.println("Seat "+seatCount+" booked at "+rowToBook+"..");
                                 noOfSeats--;
@@ -192,7 +218,6 @@ public class UserActions {
                                 System.out.println("Enter correct input..");
                                 continue;
                             }
-
                             totalSeatNumbers.add(rowToBook);
                         }
                         System.out.println("Payment of Rs : "+totalAmount+" has been made");
@@ -221,7 +246,7 @@ public class UserActions {
 
     }
 
-//    Helper method for doOperations function to send the movie object list in which the operations need to be perfomed
+//    Helper method for doOperations function to send the movie object list in which the operations need to be performed
 // Method to show all the movies
     public static void showMovies(User currentUser) {
         Scanner s = new Scanner(System.in);
