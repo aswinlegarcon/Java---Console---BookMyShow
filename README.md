@@ -3,6 +3,11 @@
 ## Overview
 This is a terminal-based application developed in Java, inspired by the BookMyShow platform. It includes features such as browsing movies, selecting seats, booking tickets, and managing user accounts. The application is designed to run entirely in the terminal and is intended for improving backend coding skills and logical thinking.
 
+
+## Class Diagram
+
+![BookMyShow Class Diagram](https://github.com/user-attachments/assets/37890f7f-7bfb-4b68-962b-1902a4633fe3)
+
 ## Features
 1. **User Authentication**
    - User registration and login.
@@ -30,6 +35,7 @@ This is a terminal-based application developed in Java, inspired by the BookMySh
 ## Prerequisites
 - **Java JDK 11 or later**
 - **Text Editor or IDE** (e.g., IntelliJ IDEA, Eclipse)
+
 
 ## Getting Started
 1. Clone the repository:
