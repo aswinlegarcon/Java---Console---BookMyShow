@@ -16,11 +16,10 @@ public class Shows {
     private HashMap<Character, ArrayList<String>> seatsAndGrid = new HashMap<>();
     private int price;
 
-    //private String movieName;
 
     public Shows(LocalDate dateOfShow,LocalTime startTime,LocalTime endTime, Screens screen,HashMap<Character, ArrayList<String>> seatsAndGrid,int price)
     {
-       // this.movieName = movieName;
+
         this.dateOfShow = dateOfShow;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -52,9 +51,6 @@ public class Shows {
         return price;
     }
 
-    //    public String getMovieName() {
-//        return movieName;
-//    }
 
 
     @Override

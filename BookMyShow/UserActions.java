@@ -53,10 +53,12 @@ public class UserActions {
 //    Function to view all the tickets owned by user
     public static void viewTickets(User currentUser)
     {
-        var ticketsOfUser = currentUser.getTickets();
-        System.out.println("Tickets of User : ");
-        for(Ticket ticket:ticketsOfUser)
+        var ticketsOfUser = currentUser.getTickets(); // get the tickets in user
+        System.out.println("Tickets of User : "); // print the tickets
+        for(Ticket ticket:ticketsOfUser) // loop over all the object and print every ticket
         {
+
+//            Basic own format to print a ticket
             System.out.println();
             System.out.println("------------------------------------------------|");
             System.out.println("---"+ticket.getTheatreName()+"---               |");
@@ -180,49 +182,49 @@ public class UserActions {
                             {
                                 seatToBook = currentShow.getSeatsAndGrid().get(row).get(seatNo); // get the number as it is
                             }
-
-                            if(seatToBook.equals("X"))
+                            if(seatToBook.equals("X")) // if the selected seat is X that is already booked
                             {
                                 System.out.println("Seat already booked..");
                                 continue;
                             }
-                            System.out.print("Are you sure do you want to book a ticket at "+rowToBook+": (y/n) : ");
+                            System.out.print("Are you sure do you want to book a ticket at "+rowToBook+": (y/n) : "); // Ask confirmation to book that ticket
                             String ticketConfirmChoice = s.nextLine();
-                            if(ticketConfirmChoice.equalsIgnoreCase("y"))
+                            if(ticketConfirmChoice.equalsIgnoreCase("y")) // if yes
                             {
-                                if(seatNo <= Integer.parseInt(gridAsString[0]))
+                                if(seatNo <= Integer.parseInt(gridAsString[0]))// if the seat.no less than first set of grid (before first space) eg: seat number <= 2
                                 {
-                                    currentShow.getSeatsAndGrid().get(row).set(seatNo-1,"X");
+                                    currentShow.getSeatsAndGrid().get(row).set(seatNo-1,"X");// set the seat number as per index
                                 }
-                                else if(seatNo >= (sumOfString+1) - Integer.parseInt(gridAsString[2]))
+                                else if(seatNo >= (sumOfString+1) - Integer.parseInt(gridAsString[2]))// if the seat.no greater than last space eg: seatNo >= 9
                                 {
-                                    currentShow.getSeatsAndGrid().get(row).set(seatNo+1,"X");
+                                    currentShow.getSeatsAndGrid().get(row).set(seatNo+1,"X");// get the seat number plus 1 index
                                 }
-                                else if(seatNo > Integer.parseInt(gridAsString[0]))
+                                else if(seatNo > Integer.parseInt(gridAsString[0]))// if the seat is greater than 1st space eg : seatNo > 2
                                 {
-                                    currentShow.getSeatsAndGrid().get(row).set(seatNo,"X");
+                                    currentShow.getSeatsAndGrid().get(row).set(seatNo,"X");// get the number as it is
                                 }
 
-                                System.out.println(rowToDisplay);
-                                System.out.println("Seat "+seatCount+" booked at "+rowToBook+"..");
-                                noOfSeats--;
-                                seatCount++;
+                                System.out.println(rowToDisplay); // print the row after selection
+                                System.out.println("Seat "+seatCount+" booked at "+rowToBook+".."); // print necessary things
+                                noOfSeats--; // reduce the no of seats to be booked to contol the while loop
+                                seatCount++; // increase the seat count for printing purposes
                             }
-                            else if(ticketConfirmChoice.equalsIgnoreCase("n"))
+                            else if(ticketConfirmChoice.equalsIgnoreCase("n")) // if no then cancel the booking
                             {
                                 System.out.println("Canceled Booking..");
                                 continue;
                             }
-                            else
+                            else // if wrong input
                             {
                                 System.out.println("Enter correct input..");
                                 continue;
                             }
-                            totalSeatNumbers.add(rowToBook);
+                            totalSeatNumbers.add(rowToBook); // add the seat number
                         }
-                        System.out.println("Payment of Rs : "+totalAmount+" has been made");
+                        System.out.println("Payment of Rs : "+totalAmount+" has been made"); // print the payment made
 //                        adding ticket object
-                        currentUser.getTickets().add(new Ticket(theatreName,movieName,currentShow.getScreens().getNameOfScreen(),currentDate,time,noOfTickets,totalSeatNumbers,currentShow.getPrice()*noOfTickets));
+                currentUser.getTickets().add(new Ticket(theatreName,movieName,currentShow.getScreens().getNameOfScreen(),currentDate,time,noOfTickets,totalSeatNumbers,currentShow.getPrice()*noOfTickets));
+//
 //                  Ticket printing
                 System.out.println("Your ticket is as below..");
                 System.out.println();
@@ -240,55 +242,51 @@ public class UserActions {
                 System.out.println("----------------------------");
 
             }
-//            --------------------
-//            Add other operations here
-//            ------------------
-
     }
 
 //    Helper method for doOperations function to send the movie object list in which the operations need to be performed
 // Method to show all the movies
     public static void showMovies(User currentUser) {
         Scanner s = new Scanner(System.in);
-        ArrayList<Movies> movies = new ArrayList<>();
-        HashSet<String> moviesInUserArea = new HashSet<>();
-        LocalDate currentDate = LocalDate.now();
-        LocalDate userDate = currentDate;
-        while (true)
+        ArrayList<Movies> movies = new ArrayList<>(); // movie arraylist to store the current movie objects
+        HashSet<String> moviesInUserArea = new HashSet<>(); // To print the movies in the user area
+        LocalDate currentDate = LocalDate.now(); // get the current date
+        LocalDate userDate = currentDate; // user selected date is current date by default
+        while (true) // infinite loop to run until user clicks exit
         {
-            System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter()));
-            System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter()));
-            System.out.println("Current location : "+ currentUser.getLocation());
+            System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter())); // print the current date
+            System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter())); // print the selected date
+            System.out.println("Current location : "+ currentUser.getLocation()); // print the current selected location
 
-            boolean status = displayMovies(currentUser, userDate , moviesInUserArea);
-            if (!status)
+            boolean status = displayMovies(currentUser, userDate , moviesInUserArea); // call displaymovies method and store it in boolean
+            if (!status) // if it is false then no movies available there
             {
                 System.out.println("No movies available in this location..in this date..");
-                LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate);
-                if(tempDate!=null)
+                LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call change preference method and store in a Date variable (Returns date if user need to change date or if user need to change location then return null object)
+                if(tempDate!=null) // if the date is not null
                 {
-                    userDate = tempDate;
+                    userDate = tempDate; // then change the date
                 }
             }
-            else if(status)
+            else if(status) // if the status is true
             {
-                System.out.print("Enter the movie name to book (enter 'change' to change your preferences): ");
+                System.out.print("Enter the movie name to book (enter 'change' to change your preferences): "); // ask movie name to book or enter change to change the preferences
                 String movieToBook = s.nextLine();
-                if(movieToBook.equals("change"))
+                if(movieToBook.equals("change")) // if user entered change
                 {
-                    LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate);
-                    if(tempDate!=null)
+                    LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call the change preferences method
+                    if(tempDate!=null) // if the date not null
                     {
-                        userDate = tempDate;
+                        userDate = tempDate; // then set date to user selected date and continue the loop
                     }
                 }
-                else if(moviesInUserArea.contains(movieToBook))
+                else if(moviesInUserArea.contains(movieToBook)) // if the movie name in the list
                 {
-                        for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movieToBook))
+                        for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movieToBook)) // get the movie objects with movieName
                         {
-                            if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(userDate))
+                            if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(userDate)) // if the object matches this condition then
                             {
-                               movies.add(movieObj);
+                               movies.add(movieObj); // add that object in the arraylist of movies
                             }
                         }
                     break;
@@ -296,88 +294,88 @@ public class UserActions {
             }
 
         }
-        if(movies.isEmpty())
+        if(movies.isEmpty()) // if the movie list empty after all condition then
         {
-            System.out.println("No Movies found in that date/location...");
+            System.out.println("No Movies found in that date/location..."); // print needed details
             return;
         }
-        UserActions.doOperations(currentUser,movies,userDate);
+        UserActions.doOperations(currentUser,movies,userDate); // if all condition false and comes to this line then call the doOperation method to make the user book tickets
     }
 
 //Helper function for showMovies to list all the movies
     private static boolean displayMovies(User currentUser, LocalDate dateOfUser , HashSet<String> moviesInUserArea)
     {
         boolean mainCheck = false;
-        for(var movies : BookMyShow.getMovieNameAndMovies().keySet())
+        for(var movies : BookMyShow.getMovieNameAndMovies().keySet()) // get movie hashmap and get keys to loop over keys
         {
             boolean check = false;
-            for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movies))
+            for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movies))  // loop over the key and get objects
             {
-                if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(dateOfUser))
+                if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(dateOfUser)) // if the movie object matches location and date
                 {
-                    check = true;
+                    check = true; // make the chek as true
                 }
             }
-            if(check)
+            if(check) // if it is true
             {
-                mainCheck = true;
-                System.out.println("*"+movies);
-                moviesInUserArea.add(movies);
+                mainCheck = true; // make the main check as true
+                System.out.println("*"+movies); // print all the movies there
+                moviesInUserArea.add(movies); // add movies in Hashset
             }
 
         }
-        return mainCheck;
+        return mainCheck; // return the boolean value
     }
 
 //    Helper method to showMovies method to change the location or date of the user
     private static LocalDate changePreferences(User currentUser, LocalDate currentDate)
     {
         Scanner s = new Scanner(System.in);
-        System.out.print("Do you want to change your date/location (y/n) type 'exit' to logout : ");
+        System.out.print("Do you want to change your date/location (y/n) type 'exit' to logout : "); // ask the user what to do
         String wishOfUser = s.nextLine();
         switch (wishOfUser) {
-            case "y":
+            case "y": // if yes
                 mainLoop:while (true) {
-                    System.out.print("Enter 'date' to change date | Enter 'location' to change location | Enter 'exit' to quit : ");
+                    System.out.print("Enter 'date' to change date | Enter 'location' to change location | Enter 'exit' to quit : "); // ask user what to change
                     String changeOption = s.nextLine();
                     switch (changeOption) {
-                        case "date":
-                            System.out.print("Enter the date when to look for movies : ");
+                        case "date": // if date
+                            System.out.print("Enter the date when to look for movies : "); // get the date from the user
                             LocalDate dateOfUser = LocalDate.parse(s.nextLine(), BookMyShow.getFormatter());
-                            if (dateOfUser.isAfter(currentDate) || dateOfUser.isEqual(currentDate)) {
+                            if (dateOfUser.isAfter(currentDate) || dateOfUser.isEqual(currentDate)) { // check the date is not in past
                                 return dateOfUser;
                             }
-                            System.out.println("Enter upcoming dates not the past days..");
+                            System.out.println("Enter upcoming dates not the past days.."); // print if past date
                             break;
 
-                        case "location":
+                        case "location": // if user chose to change location
                             for (String availableLocations : BookMyShow.getLocations()) {
-                                System.out.println("* " + availableLocations);
+                                System.out.println("* " + availableLocations); // print all the available location
                             }
-                            System.out.print("Enter the location where to look for movies : ");
+                            System.out.print("Enter the location where to look for movies : "); // get the location where to look for movies
                             String locationToLook = s.nextLine();
-                            if (BookMyShow.getLocations().contains(locationToLook)) {
-                                currentUser.setLocation(locationToLook);
-                                return null;
+                            if (BookMyShow.getLocations().contains(locationToLook)) { // if that location available
+                                currentUser.setLocation(locationToLook); // set the location
+                                return null; // return the date as null
                             }
-                            System.out.println("That location is not available..");
+                            System.out.println("That location is not available.."); // or print no location found
                             break;
-                        case "exit":
-                            break mainLoop;
+                        case "exit": // if exit then
+                            break mainLoop; // break the main loop
 
-                        default:
+                        default: // if wrong input
                             System.out.println("Enter correct input ");
                             break;
 
                     }
                 }
-            case "n":
+            case "n": // if user chose no
                 System.out.println("Refreshing...!!");
                 break;
-            case "exit":
+            case "exit": // if user chose exit
                 System.out.println("Logging out");
                 break;
-            default:
+            default: // if no correct input
                 System.out.println("Enter correct input..!!");
 
         }

@@ -79,12 +79,15 @@ public class BookMyShowActions {
                         int choiceToDo = Integer.parseInt(s.nextLine());
                                 switch (choiceToDo)
                                 {
+//                                    If need to continue ticket booking
                                     case 1:
                                         UserActions.showMovies(currentUser);
                                         break;
+//                                        If need to view Tickets owned by user
                                     case 2:
                                         UserActions.viewTickets(currentUser);
                                         break;
+//                                        If need to logout
                                     case 3:
                                         System.out.println("Logging out..");
                                         break main;
