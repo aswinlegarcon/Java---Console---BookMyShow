@@ -29,12 +29,7 @@ public class BookMyShowActions {
                     Admin currentAdmin = AdminActions.login(s); // getting admin object and storing (returns null if no admins - returns admin if vaild credentials - return username as null if password wrong)
                     if(currentAdmin == null)// if not null
                     {
-                        System.out.println("No Admins found..");
-                        break;
-                    }
-                    else if(currentAdmin.getUserName() == null)// check if username is null
-                    {
-                        System.out.println("Invalid Username or Password....Try Again");
+                        System.out.println("Username or password is wrond..");
                         break;
                     }
                     else

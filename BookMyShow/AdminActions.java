@@ -25,7 +25,7 @@ public class AdminActions {
             }
             else if(adminToCheck.getUserName().equals(userName) && !adminToCheck.getPassword().equals(password))// if password alone wrong then return username null
             {
-                return new Admin(null,null);
+                return null;
             }
 
         }
@@ -128,32 +128,7 @@ public class AdminActions {
                 HashMap<String,Screens> screensHashMap = new HashMap<>();
                 for(int i = 1;i<=noOfScreens;i++) // loop as many screens need to add (EG: if 2 screens then 2 times)
                 {
-
-                        System.out.print("Enter the Name of Screen "+ i +": ");//get the name of screen i
-                        String screenName = s.nextLine();
-                        var checkScreenAlreadyAvailable = BookMyShow.getTheatreNameAndTheatre().get(theatreName); // getting hashmap with key theatre name
-                        System.out.print("Enter the number of seats :");// get the number of seats in that screen
-                        long numberOfSeats = Long.parseLong(s.nextLine());
-                        System.out.print("Enter the Grid (How the seats have to be eg:2*8*2) : "); // get the grid how the seats have to be displayed
-                        String grid = s.nextLine();
-                        var seatsAndGrids = Utilities.generateGrids(numberOfSeats,grid); // storing seats and grids as HASHMAP by calling a helper function from utilities
-//                        System.out.println("The seats are as follows..");// display that seats
-//                        for(var seats:seatsAndGrids.entrySet())
-//                        {
-//                            System.out.println(seats.getKey()+" "+seats.getValue());
-//                        }
-                        Screens screenObj = new Screens(screenName,numberOfSeats,grid,seatsAndGrids); // creating new screen object with all details
-
-                        screensHashMap.put(screenName,screenObj); // adding screen object with nameofscreen,screenobj in hashmap
-                        if(checkScreenAlreadyAvailable!=null) // if theatre object not null
-                        {
-                                var screenKeys = checkScreenAlreadyAvailable.getScreenNameAndObject().keySet(); // get existing screen objects with keys
-                                if(screenKeys.contains(screenName)) // if the screen name already exist in theatre then print already exists
-                                {
-                                    System.out.println("Screen already exists...");
-                                    return;
-                                }
-                        }
+                    AdminActions.addScreens(i,screensHashMap);
                 }
                 Theatres theatres = new Theatres(theatreName,screensHashMap,locationOfTheatre); // create theatre object
                 BookMyShow.getTheatreNameAndTheatre().put(theatreName,theatres); // add theatre into hashmap with theatre name and theatre object
@@ -161,13 +136,41 @@ public class AdminActions {
                 System.out.println("Theatre Added Successfully");
             }
 
+//            helper method to add theatre to add the screens alone
+            private static void addScreens(int i,HashMap<String,Screens> screensHashMap)
+            {
+                Scanner s = new Scanner(System.in);
+                while (true)
+                {
+                    System.out.print("Enter the Name of Screen "+ i +": ");//get the name of screen i
+                    String screenName = s.nextLine();
+                    System.out.print("Enter the number of seats :");// get the number of seats in that screen
+                    long numberOfSeats = Long.parseLong(s.nextLine());
+                    System.out.print("Enter the Grid (How the seats have to be eg:2*8*2) : "); // get the grid how the seats have to be displayed
+                    String grid = s.nextLine();
+                    var seatsAndGrids = Utilities.generateGrids(numberOfSeats,grid); // storing seats and grids as HASHMAP by calling a helper function from utilities
+//                        System.out.println("The seats are as follows..");// display that seats
+//                        for(var seats:seatsAndGrids.entrySet())
+//                        {
+//                            System.out.println(seats.getKey()+" "+seats.getValue());
+//                        }
+                    Screens screenObj = new Screens(screenName,numberOfSeats,grid,seatsAndGrids); // creating new screen object with all details
+                    var screenKeys = screensHashMap.keySet(); // get existing screen objects with keys
+                    if(screenKeys.contains(screenName)) // if the screen name already exist in theatre then print already exists
+                    {
+                        System.out.println("Screen already exists...");
+                        continue;
+                    }
+                    screensHashMap.put(screenName,screenObj); // adding screen object with nameofscreen,screenobj in hashmap
+                    return;
+                }
+            }
 
 
 //  Function to add the movies
     private static void addMovies()
     {
-       Scanner s = new Scanner(System.in);
-
+        Scanner s = new Scanner(System.in);
         System.out.println("Available locations to add movies... ");// show available locations
         for(String locations:BookMyShow.getLocations())
         {
