@@ -244,30 +244,32 @@ public class AdminActions {
                 LocalTime startTime = null;
                 LocalTime endTime = null;
                 HashMap<Character,ArrayList<String>> seatsAndGrids = null;
-                while (true)
+                Shows currentShow = null;
+                main:while (true)
                 {
                     System.out.print("Enter the start time of the Show (hh:mm) : "); // get the start time
                     startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
                     endTime = startTime.plusMinutes(duration + 30); // calculate end time
-//                Making seats and grids for shows
-                   seatsAndGrids = Utilities.generateGrids(screen.getNumberOfSeats(),screen.getGrid());
+//                      Making seats and grids for shows
+                    seatsAndGrids = Utilities.generateGrids(screen.getNumberOfSeats(),screen.getGrid());
+
                     for(var show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
                     {
 //                    Condition to check if the show is before old show timings or after the old show timings
-                        if((startTime.isBefore(show.getStartTime()) || endTime.isBefore(show.getStartTime())) &&
-                                (startTime.isAfter(show.getEndTime()) || endTime.isAfter(show.getEndTime())) && dateOfMovie.isEqual(show.getDateOfShow()))
+                        if(!((startTime.isBefore(show.getStartTime()) && endTime.isBefore(show.getStartTime())) ||
+                                (startTime.isAfter(show.getEndTime()) && endTime.isAfter(show.getEndTime())) && dateOfMovie.isEqual(show.getDateOfShow())))
                         {
                             System.out.println("Show already exists.."); // if yes print this
-                            return;
+                            continue main;
                         }
                     }
-                    break;
-                }
-                Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen,seatsAndGrids,priceOfMovie);  // if no show already exist then create a show object
+                currentShow = new Shows(dateOfMovie,startTime,endTime,screen,seatsAndGrids,priceOfMovie);  // if no show already exist then create a show object
                 if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
                 {
                     System.out.println("Show already exists..");
-                    return;
+                    continue;
+                }
+                break;
                 }
                 screen.getShowsInScreen().add(currentShow); // add the show object in shows hashset -- calls hashCode and equals method which is overridden
                 Movies currentMovie = new Movies(movieName,locationOfTheatre,dateOfMovie,duration,theatres,screen,currentShow); // create a movie object with all the required details

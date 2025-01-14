@@ -35,6 +35,10 @@ public class Shows {
         return startTime;
     }
 
+    public void setSeatsAndGrid(HashMap<Character, ArrayList<String>> seatsAndGrid) {
+        this.seatsAndGrid = seatsAndGrid;
+    }
+
     public LocalTime getEndTime() {
         return endTime;
     }
