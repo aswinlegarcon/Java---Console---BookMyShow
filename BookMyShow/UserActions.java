@@ -371,10 +371,10 @@ public class UserActions {
                 }
             case "n": // if user chose no
                 System.out.println("Refreshing...!!");
-                break;
+                return null;
             case "exit": // if user chose exit
                 System.out.println("Logging out");
-                break;
+                return null;
             default: // if no correct input
                 System.out.println("Enter correct input..!!");
 

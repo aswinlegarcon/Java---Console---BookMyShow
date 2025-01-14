@@ -202,48 +202,63 @@ public class AdminActions {
                         System.out.println("* "+ theatres);
                     }
                 }
-                System.out.print("Enter the theatre where to add the movie : "); // get theatre name
-                String theatreOfMovie = s.nextLine();
-                var theatre = BookMyShow.getTheatreNameAndTheatre().keySet(); // get theatre name as string as key from hashmap
+                String theatreOfMovie = null;
+                while (true)
+                {
+                    System.out.print("Enter the theatre where to add the movie : "); // get theatre name
+                    theatreOfMovie = s.nextLine();
+                    var theatre = BookMyShow.getTheatreNameAndTheatre().keySet(); // get theatre name as string as key from hashmap
                     if(!theatre.contains(theatreOfMovie)) { // if no theatre then print no theatres in list
-                        System.out.println("No theatres found..");
-                        return;
+                        System.out.println("No theatres found..Enter correct theatre");
+                        continue;
                     }
-
+                    break;
+                }
                 Theatres theatres = BookMyShow.getTheatreNameAndTheatre().get(theatreOfMovie); // get theatre object with theatre name
                 System.out.println("Available Screens...!!"); // print all the screens
                 for(var screens:theatres.getScreenNameAndObject().keySet())
                 {
                     System.out.println("* "+screens);
                 }
-                System.out.print("Enter the screen name to add : "); // get the screen name
-                String screenNameForMovie = s.nextLine();
+                String screenNameForMovie = null;
                 Screens screen = null; // assign null screen object to get and assign inside for loop
-                var screens = theatres.getScreenNameAndObject().keySet(); // get screen hashmap as keyset (only keys)
-                if(screens.contains(screenNameForMovie)) // check if screenname key is inside the screen list
+                while (true)
                 {
-                    screen = theatres.getScreenNameAndObject().get(screenNameForMovie); // set the screen obj to the available screen
-                }
-                if(screen==null)
-                {
-                    System.out.println("No screens found..!");
-                    return;
-                }
-                System.out.print("Enter the start time of the Show (hh:mm) : "); // get the start time
-                LocalTime startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
-                LocalTime endTime = startTime.plusMinutes(duration + 30); // calculate end time
-//                Making seats and grids for shows
-                var seatsAndGrids = Utilities.generateGrids(screen.getNumberOfSeats(),screen.getGrid());
-
-                for(var show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
-                {
-//                    Condition to check if the show is before old show timings or after the old show timings
-                    if((startTime.isBefore(show.getStartTime()) || endTime.isBefore(show.getStartTime())) &&
-                            (startTime.isAfter(show.getEndTime()) || endTime.isAfter(show.getEndTime())) && dateOfMovie.isEqual(show.getDateOfShow()))
+                    System.out.print("Enter the screen name to add : "); // get the screen name
+                    screenNameForMovie = s.nextLine();
+                    var screens = theatres.getScreenNameAndObject().keySet(); // get screen hashmap as keyset (only keys)
+                    if(screens.contains(screenNameForMovie)) // check if screenname key is inside the screen list
                     {
-                        System.out.println("Show already exists.."); // if yes print this
-                        return;
+                        screen = theatres.getScreenNameAndObject().get(screenNameForMovie); // set the screen obj to the available screen
                     }
+                    if(screen==null)
+                    {
+                        System.out.println("No screens found..!");
+                        continue;
+                    }
+                    break;
+                }
+                LocalTime startTime = null;
+                LocalTime endTime = null;
+                HashMap<Character,ArrayList<String>> seatsAndGrids = null;
+                while (true)
+                {
+                    System.out.print("Enter the start time of the Show (hh:mm) : "); // get the start time
+                    startTime = LocalTime.parse(s.nextLine(),BookMyShow.getTimeFormatter());
+                    endTime = startTime.plusMinutes(duration + 30); // calculate end time
+//                Making seats and grids for shows
+                   seatsAndGrids = Utilities.generateGrids(screen.getNumberOfSeats(),screen.getGrid());
+                    for(var show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
+                    {
+//                    Condition to check if the show is before old show timings or after the old show timings
+                        if((startTime.isBefore(show.getStartTime()) || endTime.isBefore(show.getStartTime())) &&
+                                (startTime.isAfter(show.getEndTime()) || endTime.isAfter(show.getEndTime())) && dateOfMovie.isEqual(show.getDateOfShow()))
+                        {
+                            System.out.println("Show already exists.."); // if yes print this
+                            return;
+                        }
+                    }
+                    break;
                 }
                 Shows currentShow = new Shows(dateOfMovie,startTime,endTime,screen,seatsAndGrids,priceOfMovie);  // if no show already exist then create a show object
                 if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
