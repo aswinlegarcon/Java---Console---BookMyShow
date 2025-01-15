@@ -6,7 +6,8 @@ This is a terminal-based application developed in Java, inspired by the BookMySh
 
 ## Class Diagram
 
-![BookMyShow Class Diagram](https://github.com/user-attachments/assets/37890f7f-7bfb-4b68-962b-1902a4633fe3)
+![Screenshot (384)](https://github.com/user-attachments/assets/28c2c13b-abb6-4978-a9bd-a6abe0f5af35)
+
 
 ## Features
 1. **User Authentication**
