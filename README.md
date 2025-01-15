@@ -6,7 +6,8 @@ This is a terminal-based application developed in Java, inspired by the BookMySh
 
 ## Class Diagram
 
-![Screenshot (384)](https://github.com/user-attachments/assets/28c2c13b-abb6-4978-a9bd-a6abe0f5af35)
+![Screenshot (386)](https://github.com/user-attachments/assets/b33d981a-dba1-4b79-b89d-5883946de6ca)
+
 
 
 ## Features
