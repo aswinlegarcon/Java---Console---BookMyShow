@@ -55,12 +55,7 @@ This is a terminal-based application developed in Java, inspired by the BookMySh
    ```bash
    java Application
    ```
-   
 
-## Future Enhancements
-- Add support for multiple languages.
-- Implement discount codes and offers.
-- Create a GUI version using JavaFX.
 
 ## Contact
 For any queries or feedback, reach out to:
