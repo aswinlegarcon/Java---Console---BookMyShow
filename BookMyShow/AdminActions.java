@@ -256,12 +256,16 @@ public class AdminActions {
                     for(var show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
                     {
 //                    Condition to check if the show is before old show timings or after the old show timings
-                        if(!((startTime.isBefore(show.getStartTime()) && endTime.isBefore(show.getStartTime())) ||
-                                (startTime.isAfter(show.getEndTime()) && endTime.isAfter(show.getEndTime())) && dateOfMovie.isEqual(show.getDateOfShow())))
+                        if(dateOfMovie.isEqual(show.getDateOfShow()))
                         {
-                            System.out.println("Show already exists.."); // if yes print this
-                            continue main;
+                            if(!((startTime.isBefore(show.getStartTime()) && endTime.isBefore(show.getStartTime())) ||
+                                    (startTime.isAfter(show.getEndTime()) && endTime.isAfter(show.getEndTime()))))
+                            {
+                                System.out.println("Show already exists.."); // if yes print this
+                                continue main;
+                            }
                         }
+
                     }
                 currentShow = new Shows(dateOfMovie,startTime,endTime,screen,seatsAndGrids,priceOfMovie);  // if no show already exist then create a show object
                 if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)

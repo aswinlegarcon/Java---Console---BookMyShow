@@ -74,6 +74,62 @@ public class UserActions {
         }
     }
 
+    // Method to show all the movies
+    public static void showMovies(User currentUser) {
+        Scanner s = new Scanner(System.in);
+        ArrayList<Movies> movies = new ArrayList<>(); // movie arraylist to store the current movie objects
+        HashSet<String> moviesInUserArea = new HashSet<>(); // To print the movies in the user area
+        LocalDate currentDate = LocalDate.now(); // get the current date
+        LocalDate userDate = currentDate; // user selected date is current date by default
+        while (true) // infinite loop to run until user clicks exit
+        {
+            System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter())); // print the current date
+            System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter())); // print the selected date
+            System.out.println("Current location : "+ currentUser.getLocation()); // print the current selected location
+
+            boolean status = displayMovies(currentUser, userDate , moviesInUserArea); // call displaymovies method and store it in boolean
+            if (!status) // if it is false then no movies available there
+            {
+                System.out.println("No movies available in this location..in this date..");
+                LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call change preference method and store in a Date variable (Returns date if user need to change date or if user need to change location then return null object)
+                if(tempDate!=null) // if the date is not null
+                {
+                    userDate = tempDate; // then change the date
+                }
+            }
+            else if(status) // if the status is true
+            {
+                System.out.print("Enter the movie name to book (enter 'change' to change your preferences): "); // ask movie name to book or enter change to change the preferences
+                String movieToBook = s.nextLine();
+                if(movieToBook.equals("change")) // if user entered change
+                {
+                    LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call the change preferences method
+                    if(tempDate!=null) // if the date not null
+                    {
+                        userDate = tempDate; // then set date to user selected date and continue the loop
+                    }
+                }
+                else if(moviesInUserArea.contains(movieToBook)) // if the movie name in the list
+                {
+                    for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movieToBook)) // get the movie objects with movieName
+                    {
+                        if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(userDate)) // if the object matches this condition then
+                        {
+                            movies.add(movieObj); // add that object in the arraylist of movies
+                        }
+                    }
+                    break;
+                }
+            }
+
+        }
+        if(movies.isEmpty()) // if the movie list empty after all condition then
+        {
+            System.out.println("No Movies found in that date/location..."); // print needed details
+            return;
+        }
+        UserActions.doOperations(currentUser,movies,userDate); // if all condition false and comes to this line then call the doOperation method to make the user book tickets
+    }
 
     //    Operations that can be done by users
     public static void doOperations(User currentUser, ArrayList<Movies> movies, LocalDate currentDate) {
@@ -177,14 +233,13 @@ public class UserActions {
         HashSet<String> seatNumbers = new HashSet<>(); // to store the seat numbers temporarily
         //        Make duplicate hashmap
         HashMap<Character, ArrayList<String>> duplicateSeatsAndGrids = new HashMap<>(); // creating a duplicate hashmap
-        for (var keysAndValues : currentShow.getSeatsAndGrid().entrySet()) // getting seats and grids as keys and values
+        for(var keysAndValues : currentShow.getSeatsAndGrid().entrySet()) // getting seats and grids as keys and values
         {
             duplicateSeatsAndGrids.put(keysAndValues.getKey(), new ArrayList<>()); // add the keys into the duplicate seats and grids
             duplicateSeatsAndGrids.get(keysAndValues.getKey()).addAll(keysAndValues.getValue()); // get the key and add the value
         }
         while (noOfSeats > 0) // loops until no of seats greater than 0
         {
-
             System.out.print("Enter the seatNo where to book the seat " + seatCount + " (A1,B4,C2): "); // get seat numbers
             String rowToBook = s.nextLine();
             char row = rowToBook.charAt(0); // get the Row as A,B etc
@@ -195,11 +250,16 @@ public class UserActions {
                 System.out.println("Row not available enter correct row..");
                 continue;
             }
-
             var gridAsString = currentShow.getScreens().getGrid().split("\\*"); // get the grid pattern from the screen and store it as String array
             int sumOfString = 0; // variable to calculate sum of grids
-            for (String grid : gridAsString) {
+            for (String grid : gridAsString)
+            {
                 sumOfString = sumOfString + Integer.parseInt(grid); // calculating sum of grids
+            }
+            if(seatNo>sumOfString) // if entered seat.no greater than seats
+            {
+                System.out.println("Enter correct ticket..");
+                continue;
             }
             String seatToBook = null; // getting that seat to check already booked or available
 
@@ -269,63 +329,6 @@ public class UserActions {
 
 
 
-//    Helper method for doOperations function to send the movie object list in which the operations need to be performed
-// Method to show all the movies
-    public static void showMovies(User currentUser) {
-        Scanner s = new Scanner(System.in);
-        ArrayList<Movies> movies = new ArrayList<>(); // movie arraylist to store the current movie objects
-        HashSet<String> moviesInUserArea = new HashSet<>(); // To print the movies in the user area
-        LocalDate currentDate = LocalDate.now(); // get the current date
-        LocalDate userDate = currentDate; // user selected date is current date by default
-        while (true) // infinite loop to run until user clicks exit
-        {
-            System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter())); // print the current date
-            System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter())); // print the selected date
-            System.out.println("Current location : "+ currentUser.getLocation()); // print the current selected location
-
-            boolean status = displayMovies(currentUser, userDate , moviesInUserArea); // call displaymovies method and store it in boolean
-            if (!status) // if it is false then no movies available there
-            {
-                System.out.println("No movies available in this location..in this date..");
-                LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call change preference method and store in a Date variable (Returns date if user need to change date or if user need to change location then return null object)
-                if(tempDate!=null) // if the date is not null
-                {
-                    userDate = tempDate; // then change the date
-                }
-            }
-            else if(status) // if the status is true
-            {
-                System.out.print("Enter the movie name to book (enter 'change' to change your preferences): "); // ask movie name to book or enter change to change the preferences
-                String movieToBook = s.nextLine();
-                if(movieToBook.equals("change")) // if user entered change
-                {
-                    LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call the change preferences method
-                    if(tempDate!=null) // if the date not null
-                    {
-                        userDate = tempDate; // then set date to user selected date and continue the loop
-                    }
-                }
-                else if(moviesInUserArea.contains(movieToBook)) // if the movie name in the list
-                {
-                        for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movieToBook)) // get the movie objects with movieName
-                        {
-                            if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(userDate)) // if the object matches this condition then
-                            {
-                               movies.add(movieObj); // add that object in the arraylist of movies
-                            }
-                        }
-                    break;
-                }
-            }
-
-        }
-        if(movies.isEmpty()) // if the movie list empty after all condition then
-        {
-            System.out.println("No Movies found in that date/location..."); // print needed details
-            return;
-        }
-        UserActions.doOperations(currentUser,movies,userDate); // if all condition false and comes to this line then call the doOperation method to make the user book tickets
-    }
 
 //Helper function for showMovies to list all the movies
     private static boolean displayMovies(User currentUser, LocalDate dateOfUser , HashSet<String> moviesInUserArea)
@@ -333,16 +336,18 @@ public class UserActions {
         boolean mainCheck = false;// to check whether any one movie is available or not
         for(var movies : BookMyShow.getMovieNameAndMovies().keySet()) // get movie hashmap and get keys to loop over keys
         {
-
+            boolean check = false; // everytime movie comes the boolean turns false
             for(var movieObj : BookMyShow.getMovieNameAndMovies().get(movies))  // loop over the key and get objects
             {
+
                 if(movieObj.getLocation().equals(currentUser.getLocation()) && movieObj.getDate().isEqual(dateOfUser)) // if the movie object matches location and date
                 {
-                    mainCheck = true; // make the check as true
+                    check = true; // if that movie is in current location and date then it turns true
                 }
             }
-            if(mainCheck) // if it is true (means a movie is available)
+            if(check) // if it is true (means a movie is available)
             {
+                mainCheck = true;
                 System.out.println("*"+movies); // print the movies there
                 moviesInUserArea.add(movies); // add movies in Hashset
             }
