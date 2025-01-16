@@ -8,6 +8,9 @@ This is a terminal-based application developed in Java, inspired by the BookMySh
 
 ![Screenshot (386)](https://github.com/user-attachments/assets/b33d981a-dba1-4b79-b89d-5883946de6ca)
 
+## Output Execution
+
+https://github.com/user-attachments/assets/a488c87c-c70b-4258-8bbe-bf1b66e84abb
 
 
 ## Features
