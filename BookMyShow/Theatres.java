@@ -23,7 +23,8 @@ public class Theatres {
         return name;
     }
 
-    public HashMap<String,Screens> getScreenNameAndObject() {
+    public HashMap<String,Screens> getScreenNameAndObject()
+    {
         return screenNameAndObject;
     }
 

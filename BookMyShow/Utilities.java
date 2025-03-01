@@ -8,8 +8,6 @@ public class Utilities {
 //    Method to generate seat pattern for screens
     public static HashMap<Character, ArrayList<String>> generateGrids(long noOfSeats, String grid )
     {
-        ArrayList<User> users = BookMyShow.getUsers();
-
         var gridAsString = grid.split("\\*"); // input will be 2*6*2 so we have to spilt * and store as string array{"2","6"."8"}
         int sumOfGrids = 0; // to store the sum of input eg: 2*6*2 --- 2+6+2
         for(String grids:gridAsString) // loop to add and store it as integers

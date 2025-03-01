@@ -1,6 +1,7 @@
 package BookMyShow;
 
 import ATM.ATMMachine;
+import BookMyShow.Templates.AdminActionsTemplate;
 
 import java.awt.print.Book;
 import java.time.LocalDate;
@@ -8,10 +9,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class AdminActions {
+public class AdminActions implements AdminActionsTemplate {
 //function to check admin credentials and return object accordingly
-    public static Admin login(Scanner s)
+    @Override
+    public Account login()
     {
+        Scanner s = new Scanner(System.in);
         ArrayList<Admin> admins= BookMyShow.getAdmins(); // getting and storing admin arraylist
         System.out.print("Enter the Username : "); // get the username
         String userName = s.nextLine();
@@ -32,9 +35,10 @@ public class AdminActions {
         return null; // if no admin in arraylist then return null
     }
 
-
-    public static void showOperations(Scanner s,Admin currentAdmin) // admin operations
+    @Override
+    public  void showOperations(Admin currentAdmin) // admin operations
     {
+        Scanner s = new Scanner(System.in);
         while (true) // infinite loop until logout
         {
             System.out.println("Choose your Operations..!! \n 1. Add Location\n 2. Add Theatre \n 3. Add Movies\n 4. View All Movies \n 5. View All Theatres \n 6. Logout");// asking what to do
@@ -44,23 +48,23 @@ public class AdminActions {
             {
 //                If option 1 then add the location
                 case 1:
-                    AdminActions.addLocations();
+                    addLocations();
                     break;
 //                  If option 2 then add the theatres
                 case 2:
-                    AdminActions.addTheatres();
+                    addTheatres();
                     break;
 //                    If option 3 then add the movies
                 case 3:
-                    AdminActions.addMovies();
+                    addMovies();
                     break;
 //                    If option 4 then view the movies
                 case 4:
-                    AdminActions.viewMovies();
+                    viewMovies();
                     break;
 //                    If option 5 then view the theatres
                 case 5:
-                    AdminActions.viewTheatres();
+                    viewTheatres();
                     break;
 //                    If option 6 then logout
                 case 6:
@@ -76,7 +80,8 @@ public class AdminActions {
     }
 
 //    function to add the locations
-    private static void addLocations()
+    @Override
+    public void addLocations()
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the Location name to add :"); // get location name
@@ -91,7 +96,8 @@ public class AdminActions {
     }
 
 //    function to add the theatres
-    private static void addTheatres()
+    @Override
+    public void addTheatres()
     {
         Scanner s = new Scanner(System.in);
         System.out.println("Available locations to add theatres... ");// show available locations
@@ -149,11 +155,11 @@ public class AdminActions {
                     System.out.print("Enter the Grid (How the seats have to be eg:2*8*2) : "); // get the grid how the seats have to be displayed
                     String grid = s.nextLine();
                     var seatsAndGrids = Utilities.generateGrids(numberOfSeats,grid); // storing seats and grids as HASHMAP by calling a helper function from utilities
-//                        System.out.println("The seats are as follows..");// display that seats
-//                        for(var seats:seatsAndGrids.entrySet())
-//                        {
-//                            System.out.println(seats.getKey()+" "+seats.getValue());
-//                        }
+                        System.out.println("The seats are as follows..");// display that seats
+                        for(var seats:seatsAndGrids.entrySet())
+                        {
+                            System.out.println(seats.getKey()+" "+seats.getValue());
+                        }
                     Screens screenObj = new Screens(screenName,numberOfSeats,grid,seatsAndGrids); // creating new screen object with all details
                     var screenKeys = screensHashMap.keySet(); // get existing screen objects with keys
                     if(screenKeys.contains(screenName)) // if the screen name already exist in theatre then print already exists
@@ -168,7 +174,8 @@ public class AdminActions {
 
 
 //  Function to add the movies
-    private static void addMovies()
+    @Override
+    public void addMovies()
     {
         Scanner s = new Scanner(System.in);
         System.out.println("Available locations to add movies... ");// show available locations
@@ -253,7 +260,7 @@ public class AdminActions {
 //                      Making seats and grids for shows
                     seatsAndGrids = Utilities.generateGrids(screen.getNumberOfSeats(),screen.getGrid());
 
-                    for(var show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
+                    for(Shows show : screen.getShowsInScreen()) // loop over show objects to check it same show available already
                     {
 //                    Condition to check if the show is before old show timings or after the old show timings
                         if(dateOfMovie.isEqual(show.getDateOfShow()))
@@ -265,14 +272,14 @@ public class AdminActions {
                                 continue main;
                             }
                         }
-
                     }
+
                 currentShow = new Shows(dateOfMovie,startTime,endTime,screen,seatsAndGrids,priceOfMovie);  // if no show already exist then create a show object
-                if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
-                {
-                    System.out.println("Show already exists..");
-                    continue;
-                }
+                    if(screen.getShowsInScreen().contains(currentShow)) // if the show with same start time and same end time and same date exist then it will go inside (equals method overridden in shows)
+                    {
+                        System.out.println("Show already exists..");
+                        continue;
+                    }
                 break;
                 }
                 screen.getShowsInScreen().add(currentShow); // add the show object in shows hashset -- calls hashCode and equals method which is overridden
@@ -291,7 +298,8 @@ public class AdminActions {
 
 
 //    Function to view all the movies available
-    private static void viewMovies()
+    @Override
+    public void viewMovies()
     {
         System.out.println("---------------------\n");
         var keySet = BookMyShow.getMovieNameAndMovies().keySet(); // get the keys from the hashmap
@@ -321,7 +329,8 @@ public class AdminActions {
     }
 
 //    Function to view all the theatres available
-    private static void viewTheatres()
+    @Override
+    public void viewTheatres()
     {
         System.out.println("Available Theatres...");// print available theatres
         System.out.println("----------------------------");

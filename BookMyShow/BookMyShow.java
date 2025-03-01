@@ -18,6 +18,8 @@ public class BookMyShow {
     }
 
 
+
+
     public static HashMap<String, ArrayList<Movies>> getMovieNameAndMovies() {
         return movieNameAndMovies;
     }

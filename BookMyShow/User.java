@@ -2,31 +2,17 @@ package BookMyShow;
 
 import java.util.ArrayList;
 
-public class User {
-    private String userName;
-    private String password;
+public class User extends Account{
+
     private String name;
     private String location;
     private ArrayList<Ticket> tickets = new ArrayList<>();
 
     public User(String userName, String password, String name, String location)
     {
-        this.userName = userName;
-        this.password = password;
+        super(userName,password);
         this.name = name;
         this.location = location;
-    }
-    public String getUserName() {
-        return userName;
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getName() {

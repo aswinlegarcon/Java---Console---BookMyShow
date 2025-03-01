@@ -26,7 +26,8 @@ public class BookMyShowActions {
             {
 //                If Admin came into Book My Show
                 case 1:
-                    Admin currentAdmin = AdminActions.login(s); // getting admin object and storing (returns null if no admins - returns admin if vaild credentials - return username as null if password wrong)
+                    AdminActions adminActions = new AdminActions();
+                    Account currentAdmin = adminActions.login(); // getting admin object and storing (returns null if no admins - returns admin if vaild credentials - return username as null if password wrong)
                     if(currentAdmin == null)// if not null
                     {
                         System.out.println("Username or password is wrond..");
@@ -35,12 +36,17 @@ public class BookMyShowActions {
                     else
                     {
                         System.out.println("Login Success...!!");
-                        AdminActions.showOperations(s,currentAdmin);
+                        if(currentAdmin instanceof Admin)
+                        {
+                            adminActions.showOperations((Admin)currentAdmin);
+                        }
                     }
                     break;
 //                    If User came into Book My Show
                 case 2:
-                    User currentUser = UserActions.login(s);// getting user object and storing (returns null if no users - returns user if vaild credentials - return username as null if password wrong)
+                    UserActions userActions = new UserActions();
+                    Account currentUser = userActions.login();// getting user object and storing (returns null if no users - returns user if vaild credentials - return username as null if password wrong)
+
                     if(currentUser==null) // check if username is null (if null then ask user want to register or not)
                     {
                         System.out.println("No Account Found..Register and Try again");
@@ -48,7 +54,7 @@ public class BookMyShowActions {
                         String option = s.nextLine();
                         if(option.equals("y")) // if yess then register the user
                         {
-                            UserActions.register(s);
+                            userActions.register();
                         }
                         else if (option.equals("n"))// if noo the exits
                         {
@@ -67,7 +73,10 @@ public class BookMyShowActions {
                     }
                     else if(currentUser!=null) // if vaild credentials then call show movies
                     {
-                        UserActions.showMovies(currentUser); // show the movie
+                        if(currentUser instanceof User)
+                        {
+                            userActions.showMovies((User)currentUser); // show the movie
+                        }
                         main:while (true)
                         {
                         System.out.println("Enter the option what to do \n 1.Continue Booking Tickets \n 2.View All Tickets \n 3.Logout");
@@ -76,11 +85,17 @@ public class BookMyShowActions {
                                 {
 //                                    If need to continue ticket booking
                                     case 1:
-                                        UserActions.showMovies(currentUser);
+                                        if(currentUser instanceof User)
+                                        {
+                                            userActions.showMovies((User)currentUser);
+                                        }
                                         break;
 //                                        If need to view Tickets owned by user
                                     case 2:
-                                        UserActions.viewTickets(currentUser);
+                                        if(currentUser instanceof User)
+                                        {
+                                            userActions.viewTickets((User)currentUser);
+                                        }
                                         break;
 //                                        If need to logout
                                     case 3:

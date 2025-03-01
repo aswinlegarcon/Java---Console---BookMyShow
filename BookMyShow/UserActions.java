@@ -1,14 +1,16 @@
 package BookMyShow;
 
-import java.awt.print.Book;
+import BookMyShow.Templates.UserActionsTemplate;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class UserActions {
+public class UserActions implements UserActionsTemplate {
     //   Method to login the user
-    public static User login(Scanner s) {
+    @Override
+    public Account login() {
+        Scanner s = new Scanner(System.in);
         ArrayList<User> users = BookMyShow.getUsers(); // get the users list
         System.out.print("Enter the Username : "); // get the username
         String userName = s.nextLine();
@@ -32,7 +34,9 @@ public class UserActions {
 
 
     //    Function to register the user if no user available
-    public static void register(Scanner s) {
+    @Override
+    public void register() {
+        Scanner s = new Scanner(System.in);
         System.out.println("Give Your Details to Register..");
         System.out.print("Enter your Name :"); // get the name
         String name = s.nextLine();
@@ -48,7 +52,8 @@ public class UserActions {
     }
 
     //    Function to view all the tickets owned by user
-    public static void viewTickets(User currentUser) {
+    @Override
+    public void viewTickets(User currentUser) {
         var ticketsOfUser = currentUser.getTickets(); // get the tickets in user
         System.out.println("Tickets of User : "); // print the tickets
         for (Ticket ticket : ticketsOfUser) // loop over all the object and print every ticket
@@ -75,7 +80,8 @@ public class UserActions {
     }
 
     // Method to show all the movies
-    public static void showMovies(User currentUser) {
+    @Override
+    public void showMovies(User currentUser) {
         Scanner s = new Scanner(System.in);
         ArrayList<Movies> movies = new ArrayList<>(); // movie arraylist to store the current movie objects
         HashSet<String> moviesInUserArea = new HashSet<>(); // To print the movies in the user area
@@ -87,11 +93,11 @@ public class UserActions {
             System.out.println("Selected date : " + userDate.format(BookMyShow.getFormatter())); // print the selected date
             System.out.println("Current location : "+ currentUser.getLocation()); // print the current selected location
 
-            boolean status = displayMovies(currentUser, userDate , moviesInUserArea); // call displaymovies method and store it in boolean
+            boolean status = displayMovies(currentUser, userDate , moviesInUserArea); // call display-movies method and store it in boolean
             if (!status) // if it is false then no movies available there
             {
                 System.out.println("No movies available in this location..in this date..");
-                LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call change preference method and store in a Date variable (Returns date if user need to change date or if user need to change location then return null object)
+                LocalDate tempDate = changePreferences(currentUser,currentDate); // call change preference method and store in a Date variable (Returns date if user need to change date or if user need to change location then return null object)
                 if(tempDate!=null) // if the date is not null
                 {
                     userDate = tempDate; // then change the date
@@ -103,7 +109,7 @@ public class UserActions {
                 String movieToBook = s.nextLine();
                 if(movieToBook.equals("change")) // if user entered change
                 {
-                    LocalDate tempDate = UserActions.changePreferences(currentUser,currentDate); // call the change preferences method
+                    LocalDate tempDate = changePreferences(currentUser,currentDate); // call the change preferences method
                     if(tempDate!=null) // if the date not null
                     {
                         userDate = tempDate; // then set date to user selected date and continue the loop
@@ -128,11 +134,11 @@ public class UserActions {
             System.out.println("No Movies found in that date/location..."); // print needed details
             return;
         }
-        UserActions.doOperations(currentUser,movies,userDate); // if all condition false and comes to this line then call the doOperation method to make the user book tickets
+        doOperations(currentUser,movies,userDate); // if all condition false and comes to this line then call the doOperation method to make the user book tickets
     }
 
     //    Operations that can be done by users
-    public static void doOperations(User currentUser, ArrayList<Movies> movies, LocalDate currentDate) {
+    public void doOperations(User currentUser, ArrayList<Movies> movies, LocalDate currentDate) {
         Scanner s = new Scanner(System.in);
         System.out.println("The movie availability is as below : ");
         System.out.println("Current date : " + currentDate.format(BookMyShow.getFormatter())); // print the current date
@@ -140,10 +146,14 @@ public class UserActions {
         String movieName = null;
         for (Movies movie : movies) // loop over all the movie objects of movie user selected
         {
+
             if (theatreAgainstShows.containsKey(movie.getTheatre().getName())) // if the hashmap contains theatre name already
             {
-                theatreAgainstShows.get(movie.getTheatre().getName()).add(movie.getShow()); // Then add the show object of current movie that is running in that theatre
-            } else {
+                HashSet<Shows> shows = theatreAgainstShows.get(movie.getTheatre().getName()); // Then add the show object of current movie that is running in that theatre
+                shows.add(movie.getShow());
+            }
+            else
+            {
                 HashSet<Shows> shows = new HashSet<>(); // create new hashset to put into hashmap
                 shows.add(movie.getShow()); // add the show into hashset
                 theatreAgainstShows.put(movie.getTheatre().getName(), shows); // put the theatre name and shows inside the hashmap
@@ -198,7 +208,7 @@ public class UserActions {
             int totalAmount = currentShow.getPrice() * noOfSeats; // total amount of tickets
             int seatCount = 1; // Integer to print as Seat 1/Seat 2 etc
             HashSet<String> totalSeatNumbers = new HashSet<>(); // To store Total seats booked as A1 A2
-            totalSeatNumbers = UserActions.bookShows(currentShow,seatCount,noOfSeats); // function to book the show
+            totalSeatNumbers = bookShows(currentShow,seatCount,noOfSeats); // function to book the show
             if(totalSeatNumbers==null)
             {
                 System.out.println("Continuing..");
@@ -227,7 +237,7 @@ public class UserActions {
         }
 
 //      helper method to do operation to book shows
-    private static HashSet<String> bookShows(Shows currentShow,int seatCount,int noOfSeats)
+    private HashSet<String> bookShows(Shows currentShow,int seatCount,int noOfSeats)
     {
         Scanner s = new Scanner(System.in);
         HashSet<String> seatNumbers = new HashSet<>(); // to store the seat numbers temporarily
@@ -331,7 +341,7 @@ public class UserActions {
 
 
 //Helper function for showMovies to list all the movies
-    private static boolean displayMovies(User currentUser, LocalDate dateOfUser , HashSet<String> moviesInUserArea)
+    private boolean displayMovies(User currentUser, LocalDate dateOfUser , HashSet<String> moviesInUserArea)
     {
         boolean mainCheck = false;// to check whether any one movie is available or not
         for(var movies : BookMyShow.getMovieNameAndMovies().keySet()) // get movie hashmap and get keys to loop over keys
@@ -356,8 +366,11 @@ public class UserActions {
         return mainCheck; // return the boolean value
     }
 
+
+
+
 //    Helper method to showMovies method to change the location or date of the user
-    private static LocalDate changePreferences(User currentUser, LocalDate currentDate)
+    private LocalDate changePreferences(User currentUser, LocalDate currentDate)
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Do you want to change your date/location (y/n) type 'exit' to logout : "); // ask the user what to do
